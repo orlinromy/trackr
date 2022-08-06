@@ -4,6 +4,7 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import { get } from "lodash";
+import { validationResult, ValidationError } from "express-validator";
 import * as dotenv from "dotenv";
 dotenv.config();
 // import { get } from "lodash";
@@ -11,13 +12,20 @@ dotenv.config();
 class SessionsController {
   public async login(req: Request, res: Response) {
     try {
+      const err: Record<string, ValidationError> =
+        validationResult(req).mapped();
+      console.log(err);
+      if (Object.keys(err).length !== 0) {
+        return res.status(400).json({ message: [err.name, err.password] });
+      }
+
       const client = await pool.connect();
 
       const sql: string = "SELECT * FROM users WHERE email = $1::text;";
       const { rows: loginUser } = await client.query(sql, [req.body.email]);
 
       if (loginUser.length === 0) {
-        return res.status(404).json({ message: "user not found" });
+        return res.status(401).json({ message: "user not found" });
       }
 
       const result: boolean = await bcrypt.compare(

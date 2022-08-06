@@ -2,6 +2,7 @@ import pool from "../db/db";
 import { Request, Response } from "express";
 import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
+import { Result, ValidationError, validationResult } from "express-validator";
 import { v4 as uuidv4 } from "uuid";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -10,6 +11,15 @@ dotenv.config();
 class UsersController {
   public async register(req: Request, res: Response) {
     try {
+      const err: Record<string, ValidationError> =
+        validationResult(req).mapped();
+      console.log(err);
+      if (Object.keys(err).length !== 0) {
+        return res
+          .status(400)
+          .json({ message: [err.name, err.password, err.email] });
+      }
+
       const client = await pool.connect();
       const searchSql = "SELECT * FROM users where email = $1::varchar(80)";
 
@@ -38,17 +48,17 @@ class UsersController {
     }
   }
 
-  public async getUsers(req: Request, res: Response) {
-    try {
-      const client = await pool.connect();
-      const sql = "SELECT * from users;";
-      const { rows } = await client.query(sql);
-      const users = rows;
-      client.release();
-      // @ts-ignore
-      res.status(200).json({ users, decoded: req.decoded });
-    } catch (error) {}
-  }
+  // public async getUsers(req: Request, res: Response) {
+  //   try {
+  //     const client = await pool.connect();
+  //     const sql = "SELECT * from users;";
+  //     const { rows } = await client.query(sql);
+  //     const users = rows;
+  //     client.release();
+  //     // @ts-ignore
+  //     res.status(200).json({ users, decoded: req.decoded });
+  //   } catch (error) {}
+  // }
 }
 
 export default UsersController;

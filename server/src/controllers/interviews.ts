@@ -7,7 +7,6 @@ import { isAuthJob, isAuthInterview } from "../utils/utils";
 import { get } from "lodash";
 import * as dotenv from "dotenv";
 import { PoolClient } from "pg";
-import { request } from "http";
 dotenv.config();
 
 class InterviewsController {

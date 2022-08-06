@@ -11,7 +11,8 @@ const checkTokenValidity = async (
   res: Response,
   next: NextFunction
 ) => {
-  const accessToken = get(req, "headers.authorization").replace(
+  console.log("check token validity");
+  const accessToken = get(req, "headers.authorization")?.replace(
     /^Bearer\s/,
     ""
   );

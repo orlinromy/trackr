@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import * as customType from "../types/type";
 
-const Login = () => {
-  const [data, setData] = useState<customType.loginInputData>({
+const Register = () => {
+  const [data, setData] = useState<customType.registerInputData>({
     email: "",
     password: "",
+    name: "",
   });
-
   const [error, setError] = useState<customType.userInputError>();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -17,24 +17,27 @@ const Login = () => {
     });
   }
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     try {
       console.log("submit login");
-      const res = await axios.post<customType.loginData>(
+      await axios.put("http://localhost:5001/users/register", data);
+      const loginData = await axios.post<customType.loginData>(
         "http://localhost:5001/sessions/login",
-        data
+        { email: data.email, password: data.password }
       );
-      console.log(res);
+      console.log(loginData);
     } catch (error: any) {
-      console.log(error.response.data.message);
-      setError({ message: Array.from(new Set(error.response.data.message)) });
+      console.log(error.response.data);
+      setError({
+        message: error.response.data.message,
+      });
     }
   }
 
   return (
     <div>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleRegister}>
         <label htmlFor="email">Email</label>
         <input
           id="email"
@@ -51,14 +54,22 @@ const Login = () => {
           value={data.password}
         ></input>
         <br />
+        <label htmlFor="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          onChange={handleChange}
+          value={data.name}
+        ></input>
         {error &&
           error.message.map(
             (msg) => msg && <p style={{ color: "red" }}>{msg.msg}</p>
           )}
-        <button type="submit">Log In</button>
+        <br />
+        <button type="submit">Register</button>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;
