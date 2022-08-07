@@ -55,7 +55,7 @@ class JobsController {
     try {
       const client = await pool.connect();
       const getAllJobsSql: string =
-        "SELECT * FROM applications LEFT JOIN interviews ON applications.id = interviews.job_id WHERE applications.user_id = $1::uuid;";
+        "SELECT applications.*, interviews.* FROM applications LEFT JOIN interviews ON applications.id = interviews.job_id WHERE applications.user_id = $1::uuid ORDER BY interviews.date;";
 
       const { rows: jobs } = await client.query(getAllJobsSql, [
         // @ts-ignore

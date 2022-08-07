@@ -25,7 +25,7 @@ class SessionsController {
       const { rows: loginUser } = await client.query(sql, [req.body.email]);
 
       if (loginUser.length === 0) {
-        return res.status(401).json({ message: "user not found" });
+        return res.status(401).json({ message: ["user not found"] });
       }
 
       const result: boolean = await bcrypt.compare(
@@ -34,7 +34,7 @@ class SessionsController {
       );
 
       if (!result) {
-        return res.status(401).json({ message: "authentication failed" });
+        return res.status(401).json({ message: ["authentication failed"] });
       }
 
       const sessionSql: string =
@@ -83,7 +83,7 @@ class SessionsController {
 
     console.log(updateSession[0]);
 
-    return res.status(200).json({ message: "successfully logged out" });
+    return res.status(200).json({ message: ["successfully logged out"] });
   }
 }
 

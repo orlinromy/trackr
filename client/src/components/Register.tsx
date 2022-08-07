@@ -63,7 +63,7 @@ const Register = () => {
         ></input>
         {error &&
           error.message.map(
-            (msg) => msg && <p style={{ color: "red" }}>{msg.msg}</p>
+            (msg) => msg && <p style={{ color: "red" }}>{msg}</p>
           )}
         <br />
         <button type="submit">Register</button>

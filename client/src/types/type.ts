@@ -16,14 +16,7 @@ type loginInputData = {
 };
 
 type userInputError = {
-  message: expressValidationError[];
-};
-
-type expressValidationError = {
-  location: string;
-  value: string;
-  msg: string;
-  param: string;
+  message: string[];
 };
 
 export type { loginData, registerInputData, loginInputData, userInputError };

@@ -53,7 +53,7 @@ const Login = () => {
         <br />
         {error &&
           error.message.map(
-            (msg) => msg && <p style={{ color: "red" }}>{msg.msg}</p>
+            (msg) => msg && <p style={{ color: "red" }}>{msg}</p>
           )}
         <button type="submit">Log In</button>
       </form>

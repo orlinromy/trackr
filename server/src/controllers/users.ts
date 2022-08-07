@@ -17,7 +17,7 @@ class UsersController {
       if (Object.keys(err).length !== 0) {
         return res
           .status(400)
-          .json({ message: [err.name, err.password, err.email] });
+          .json({ message: [err.name.msg, err.password.msg, err.email.msg] });
       }
 
       const client = await pool.connect();
@@ -28,7 +28,7 @@ class UsersController {
       ]);
       console.log(foundUsers);
       if (foundUsers.length !== 0) {
-        return res.status(400).json({ message: "user exists" });
+        return res.status(400).json({ message: ["user exists"] });
       }
 
       const sql =
@@ -41,10 +41,10 @@ class UsersController {
       ]);
       client.release();
 
-      res.status(200).json({ message: "user created" });
+      res.status(200).json({ message: ["user created"] });
     } catch (error) {
       console.log(error);
-      res.status(400).json({ message: "error" });
+      res.status(400).json({ message: ["Something went wrong"] });
     }
   }
 
