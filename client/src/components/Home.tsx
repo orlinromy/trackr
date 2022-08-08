@@ -7,11 +7,14 @@ import ViewKanbanIcon from "@mui/icons-material/ViewKanban";
 import ButtonGroup from "@mui/material/ButtonGroup";
 
 const Home = () => {
-  const [viewMode, setViewMode] = useState<string>("table");
+  const [viewMode, setViewMode] = useState<string>(
+    localStorage.getItem("viewMode") || "table"
+  );
   function setMode(e: React.MouseEvent<HTMLElement>) {
     e.stopPropagation();
     console.log(e);
     setViewMode(e.currentTarget.id);
+    localStorage.setItem("viewMode", e.currentTarget.id);
   }
 
   return (

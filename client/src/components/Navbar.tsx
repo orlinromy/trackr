@@ -26,7 +26,7 @@ const Navbar = () => {
         }
       );
       console.log(data);
-      localStorage.clear();
+      window.localStorage.clear();
       authCtx.setCredentials({ access: "", refresh: "" });
       navigate("/login");
     }
