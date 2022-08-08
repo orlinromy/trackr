@@ -11,6 +11,7 @@ dotenv.config();
 
 class SessionsController {
   public async login(req: Request, res: Response) {
+    const client = await pool.connect();
     try {
       const err: Record<string, ValidationError> =
         validationResult(req).mapped();
@@ -18,8 +19,6 @@ class SessionsController {
       if (Object.keys(err).length !== 0) {
         return res.status(400).json({ message: [err.name, err.password] });
       }
-
-      const client = await pool.connect();
 
       const sql: string = "SELECT * FROM users WHERE email = $1::text;";
       const { rows: loginUser } = await client.query(sql, [req.body.email]);
@@ -44,8 +43,6 @@ class SessionsController {
         req.get("user-agent"),
       ]);
 
-      client.release();
-
       const payload = {
         userId: loginUser[0].id,
         email: loginUser[0].email,
@@ -57,7 +54,7 @@ class SessionsController {
       };
 
       const access = jwt.sign(payload, process.env.ACCESS_SECRET as string, {
-        expiresIn: "30s",
+        expiresIn: "10s",
         jwtid: uuidv4(),
       });
 
@@ -66,24 +63,32 @@ class SessionsController {
         jwtid: uuidv4(),
       });
 
-      res.status(200).json({ access, refresh, loginUser });
+      res.status(200).json({ access, refresh });
     } catch (error) {
       console.log(error);
       res.status(400).send(error);
+    } finally {
+      client.release();
     }
   }
 
   public async logout(req: Request, res: Response) {
     const client = await pool.connect();
-    const logoutSql: string =
-      "UPDATE sessions SET valid = False WHERE id = $1::uuid RETURNING id";
-    const { rows: updateSession } = await client.query(logoutSql, [
-      get(req, "decoded.sessionId"),
-    ]);
+    try {
+      const logoutSql: string =
+        "UPDATE sessions SET valid = False WHERE id = $1::uuid RETURNING id";
+      const { rows: updateSession } = await client.query(logoutSql, [
+        get(req, "decoded.sessionId"),
+      ]);
 
-    console.log(updateSession[0]);
+      console.log(updateSession[0]);
 
-    return res.status(200).json({ message: ["successfully logged out"] });
+      return res.status(200).json({ message: ["successfully logged out"] });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      client.release();
+    }
   }
 }
 

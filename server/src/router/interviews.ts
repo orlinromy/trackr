@@ -8,6 +8,7 @@ const InterviewController = new InterviewsController();
 router.put("/interview", auth, InterviewController.addInterview); // FE need to call editJobStatus when interview is added
 router.patch("/interview", auth, InterviewController.editInterview);
 router.delete("/interview", auth, InterviewController.deleteInterview);
+router.post("/interview", auth, InterviewController.getInterviews);
 // router.patch("/job", auth, JobController.editJob);
 // router.patch("/status", auth, JobController.editJobStatus);
 // router.put("/job", auth, JobController.createNewJob);

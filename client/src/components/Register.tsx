@@ -1,15 +1,18 @@
-import React, { useState } from "react";
-// import axios from "axios";
+import React, { useState, useContext } from "react";
 import axios, { AxiosResponse } from "axios";
 import * as customType from "../types/type";
+import AuthContext from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<customType.registerInputData>({
     email: "",
     password: "",
     name: "",
   });
   const [error, setError] = useState<customType.userInputError>();
+  const authCtx = useContext(AuthContext);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     setData((prevState) => {
@@ -27,6 +30,10 @@ const Register = () => {
         { email: data.email, password: data.password }
       );
       console.log(loginData);
+      authCtx.setCredentials(loginData.data);
+      localStorage.setItem("access", loginData.data.access);
+      localStorage.setItem("refresh", loginData.data.refresh);
+      navigate("/");
     } catch (error: any) {
       console.log(error.response.data);
       setError({
@@ -45,6 +52,7 @@ const Register = () => {
           onChange={handleChange}
           value={data.email}
         ></input>
+        {error && <p style={{ color: "red" }}>{error.message[2]}</p>}
         <br />
         <label htmlFor="password">Password</label>
         <input
@@ -53,6 +61,7 @@ const Register = () => {
           onChange={handleChange}
           value={data.password}
         ></input>
+        {error && <p style={{ color: "red" }}>{error.message[1]}</p>}
         <br />
         <label htmlFor="name">Name</label>
         <input
@@ -61,10 +70,7 @@ const Register = () => {
           onChange={handleChange}
           value={data.name}
         ></input>
-        {error &&
-          error.message.map(
-            (msg) => msg && <p style={{ color: "red" }}>{msg}</p>
-          )}
+        {error && <p style={{ color: "red" }}>{error.message[0]}</p>}
         <br />
         <button type="submit">Register</button>
       </form>

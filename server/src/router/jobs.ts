@@ -9,6 +9,7 @@ router.post("/job", auth, JobController.getAllJobs);
 router.patch("/job", auth, JobController.editJob);
 router.patch("/status", auth, JobController.editJobStatus);
 router.put("/job", auth, JobController.createNewJob);
+router.delete("/job", auth, JobController.deleteJobs);
 // router.patch("/logout", auth, JobController.logout);
 
 export default router;

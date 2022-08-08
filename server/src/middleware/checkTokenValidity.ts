@@ -6,11 +6,16 @@ import { decode, reIssueAccessToken } from "../utils/utils";
 import * as dotenv from "dotenv";
 dotenv.config();
 
+function timeout(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const checkTokenValidity = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  console.log("req.body: ", req.body);
   console.log("check token validity");
   const accessToken = get(req, "headers.authorization")?.replace(
     /^Bearer\s/,
@@ -22,7 +27,7 @@ const checkTokenValidity = async (
   if (!accessToken) return next();
 
   const { decoded, expired } = await decode(accessToken, "access");
-
+  console.log(decoded, expired, refreshToken);
   if (decoded) {
     // @ts-ignore
     req.decoded = decoded;
@@ -32,7 +37,14 @@ const checkTokenValidity = async (
 
   if (expired && refreshToken) {
     console.log("expired");
-    const newAccessToken = await reIssueAccessToken({ refreshToken });
+    // const newAccessToken: any = await Promise.all([
+    //   reIssueAccessToken({ refreshToken }),
+    //   timeout(2000),
+    // ]);
+    const newAccessToken: any = await reIssueAccessToken({ refreshToken });
+    console.log(typeof newAccessToken);
+    // reIssueAccessToken({ refreshToken });
+    console.log(newAccessToken);
 
     if (newAccessToken) {
       res.setHeader("x-access-token", newAccessToken);

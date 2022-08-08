@@ -22,8 +22,8 @@ class JobsController {
     // application_date
     // hr_email
     // user_id
+    const client: PoolClient = await pool.connect();
     try {
-      const client: PoolClient = await pool.connect();
       const newJobSql: string =
         "INSERT INTO applications(title, company, location, jd_link, jd_file, latest_status, application_note, application_date, hr_email, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, DATE($8), $9, $10) RETURNING *;";
 
@@ -40,37 +40,43 @@ class JobsController {
         //@ts-ignore
         req.decoded.userId,
       ]);
-      client.release();
+      // client.release();
       const access = res.getHeader("x-access-token");
       res.status(200).json({ newJob, access });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Something went wrong" });
+    } finally {
+      client.release();
     }
   }
 
   // might need to change to get job only then get the interviews separately
   // provide refresh token always
   public async getAllJobs(req: Request, res: Response) {
+    console.log("get jobs");
+    const client = await pool.connect();
     try {
-      const client = await pool.connect();
       const getAllJobsSql: string =
-        "SELECT applications.*, interviews.* FROM applications LEFT JOIN interviews ON applications.id = interviews.job_id WHERE applications.user_id = $1::uuid ORDER BY interviews.date;";
+        "SELECT * from applications where applications.user_id = $1::uuid";
+      // "SELECT applications.*, interviews.* FROM applications LEFT JOIN interviews ON applications.id = interviews.job_id WHERE applications.user_id = $1::uuid ORDER BY interviews.date;";
 
       const { rows: jobs } = await client.query(getAllJobsSql, [
         // @ts-ignore
         req.decoded.userId,
       ]);
-      client.release();
       const access = res.getHeader("x-access-token");
       res.status(200).json({ jobs, access });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Something went wrong" });
+    } finally {
+      client.release();
     }
   }
 
   public async editJob(req: Request, res: Response) {
+    const client = await pool.connect();
     try {
       // possible fields in req.body
       // 1. title
@@ -91,11 +97,9 @@ class JobsController {
       if (!isUsersJob)
         return res.status(401).json({ message: "not authorized" });
 
-      const client = await pool.connect();
       const editJobSql: string =
         "UPDATE applications SET title = $1, company = $2, location = $3, jd_link = $4, jd_file = $5, latest_status = $6, application_note = $7, application_date = DATE($8), hr_email = $9 WHERE id = $10 RETURNING *;";
 
-      client.release();
       const { rows: jobs } = await client.query(editJobSql, [
         req.body.title,
         req.body.company,
@@ -113,10 +117,13 @@ class JobsController {
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Something went wrong" });
+    } finally {
+      client.release();
     }
   }
 
   public async editJobStatus(req: Request, res: Response) {
+    const client = await pool.connect();
     try {
       const isUsersJob = await isAuthJob(
         get(req, "decoded.userId"),
@@ -126,11 +133,9 @@ class JobsController {
       if (!isUsersJob)
         return res.status(401).json({ message: "not authorized" });
 
-      const client = await pool.connect();
       const editJobSql: string =
         "UPDATE applications SET latest_status = $1 WHERE id = $2 RETURNING *;";
 
-      client.release();
       const { rows: jobs } = await client.query(editJobSql, [
         req.body.latest_status,
         req.body.jobId,
@@ -140,6 +145,34 @@ class JobsController {
     } catch (error) {
       console.log(error);
       res.status(500).json({ messsage: "Something went wrong" });
+    } finally {
+      client.release();
+    }
+  }
+
+  public async deleteJobs(req: Request, res: Response) {
+    console.log("deleteJob req", req.body);
+    const client = await pool.connect();
+    try {
+      const isUsersJob = await isAuthJob(
+        get(req, "decoded.userId"),
+        req.body.jobId
+      );
+
+      if (!isUsersJob)
+        return res.status(401).json({ message: "not authorized" });
+
+      const deleteJobSql: string =
+        "DELETE FROM applications WHERE id = $1 RETURNING *;";
+
+      const { rows: jobs } = await client.query(deleteJobSql, [req.body.jobId]);
+      const access = res.getHeader("x-access-token");
+      res.status(200).json({ jobs, access });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ messsage: "Something went wrong" });
+    } finally {
+      client.release();
     }
   }
 }

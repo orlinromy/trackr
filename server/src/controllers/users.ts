@@ -17,7 +17,9 @@ class UsersController {
       if (Object.keys(err).length !== 0) {
         return res
           .status(400)
-          .json({ message: [err.name.msg, err.password.msg, err.email.msg] });
+          .json({
+            message: [err.name?.msg, err.password?.msg, err.email?.msg],
+          });
       }
 
       const client = await pool.connect();
