@@ -19,6 +19,7 @@ import Divider from "@mui/material/Divider";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
+import Paper from "@mui/material/Paper";
 import Slide, { SlideProps } from "@mui/material/Slide";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
@@ -50,13 +51,14 @@ const HomeTable = () => {
     setSelectedId(event.currentTarget.id);
   };
 
-  const handleClose = () => {
+  const handleMenuClose = () => {
     setAnchorEl(null);
     setSelectedId("");
   };
 
   function handleDeleteClose() {
     setIsDeleteClicked(false);
+    handleMenuClose();
   }
 
   async function getAllJobs() {
@@ -131,7 +133,8 @@ const HomeTable = () => {
   }
 
   function handleDetails() {
-    console.log();
+    handleMenuClose();
+    navigate(`/detail/${selectedId}`);
     // console.log(e);
   }
 
@@ -296,14 +299,29 @@ const HomeTable = () => {
                 >
                   <MoreVertIcon />
                 </Button>
+
                 <Menu
                   id="basic-menu"
                   anchorEl={anchorEl}
                   open={open}
-                  onClose={handleClose}
+                  onClose={handleMenuClose}
                   MenuListProps={{
                     "aria-labelledby": "basic-button",
                   }}
+                  PaperProps={{
+                    style: {
+                      width: `150px`,
+                    },
+                  }}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  elevation={1}
                 >
                   <MenuList dense>
                     <MenuItem id={data.id} onClick={handleDetails}>
@@ -311,9 +329,7 @@ const HomeTable = () => {
                     </MenuItem>
                     <Divider />
                     <MenuItem id={data.id} onClick={handleDelete}>
-                      <p style={{ color: "red" }}>
-                        <ListItemText>Delete</ListItemText>
-                      </p>
+                      <ListItemText sx={{ color: "red" }}>Delete</ListItemText>
                     </MenuItem>
                   </MenuList>
                 </Menu>

@@ -9,6 +9,7 @@ router.put("/interview", auth, InterviewController.addInterview); // FE need to 
 router.patch("/interview", auth, InterviewController.editInterview);
 router.delete("/interview", auth, InterviewController.deleteInterview);
 router.post("/interview", auth, InterviewController.getInterviews);
+router.post("/oneInterview", auth, InterviewController.getOneJobInterview);
 // router.patch("/job", auth, JobController.editJob);
 // router.patch("/status", auth, JobController.editJobStatus);
 // router.put("/job", auth, JobController.createNewJob);

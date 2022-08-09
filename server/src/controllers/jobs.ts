@@ -75,6 +75,28 @@ class JobsController {
     }
   }
 
+  public async getOneJob(req: Request, res: Response) {
+    const client = await pool.connect();
+    try {
+      const getOneJobSql: string =
+        "SELECT * from applications where applications.user_id = $1::uuid and id = $2::uuid";
+      // "SELECT applications.*, interviews.* FROM applications LEFT JOIN interviews ON applications.id = interviews.job_id WHERE applications.user_id = $1::uuid ORDER BY interviews.date;";
+
+      const { rows: jobs } = await client.query(getOneJobSql, [
+        // @ts-ignore
+        req.decoded.userId,
+        req.body.job_id,
+      ]);
+      const access = res.getHeader("x-access-token");
+      res.status(200).json({ jobs: jobs[0], access });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Something went wrong" });
+    } finally {
+      client.release();
+    }
+  }
+
   public async editJob(req: Request, res: Response) {
     const client = await pool.connect();
     try {

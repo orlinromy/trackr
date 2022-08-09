@@ -39,7 +39,7 @@ class InterviewsController {
         parseInt(maxInterviewStage[0]?.last_stage) + 1 || 1;
 
       const newInterviewSql: string =
-        "INSERT INTO interviews(stage, type, date, has_assignment, assignment_details, interview_note, job_id) VALUES ($1, $2, DATE($3), $4, $5, $6, $7) RETURNING *;";
+        "INSERT INTO interviews(stage, type, date, has_assignment, assignment_details, interview_note, job_id, interviewer_name, interviewer_title, interviewer_email) VALUES ($1, $2, DATE($3), $4, $5, $6, $7, $8, $9, $10) RETURNING *;";
 
       const { rows: newInterview } = await client.query(newInterviewSql, [
         req.body.stage || currInterviewStage,
@@ -49,6 +49,9 @@ class InterviewsController {
         req.body.assignment_details || null,
         req.body.interview_note || null,
         req.body.job_id,
+        req.body.interviewer_name || null,
+        req.body.interviewer_title || null,
+        req.body.interviewer_email || null,
       ]);
 
       const access = res.getHeader("x-access-token");
@@ -128,7 +131,7 @@ class InterviewsController {
     }
   }
 
-  // input: job_id, req.decoded.user_id
+  // input: req.decoded.user_id
   public async getInterviews(req: Request, res: Response) {
     const client: PoolClient = await pool.connect();
     console.log("get interview");
@@ -150,6 +153,37 @@ class InterviewsController {
 
       const access = res.getHeader("x-access-token");
       res.status(200).json({ interviews, access });
+    } catch (error) {
+      res.status(500).json({ message: "Something went wrong" });
+    } finally {
+      client.release();
+    }
+  }
+
+  // input: job_id, req.decoded.userId
+  public async getOneJobInterview(req: Request, res: Response) {
+    const client: PoolClient = await pool.connect();
+    console.log("get interview");
+    try {
+      const isUsersJob = await isAuthJob(
+        get(req, "decoded.userId"),
+        req.body.job_id
+      );
+      if (!isUsersJob)
+        return res
+          .status(401)
+          .json({ message: "getOneJobInterview not authorized" });
+
+      const getOneJobInterviewsSql: string =
+        "SELECT interviews.* FROM interviews WHERE job_id = $1::uuid ORDER BY interviews.date;";
+      const { rows: interview } = await client.query(
+        getOneJobInterviewsSql,
+        //@ts-ignore
+        [req.body.job_id]
+      );
+
+      const access = res.getHeader("x-access-token");
+      res.status(200).json({ interview, access });
     } catch (error) {
       res.status(500).json({ message: "Something went wrong" });
     } finally {

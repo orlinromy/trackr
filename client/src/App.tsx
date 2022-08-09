@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
+import Details from "./components/Details";
 import { Routes, Route } from "react-router-dom";
 import AuthContext from "./context/AuthContext";
 import * as customType from "./types/type";
@@ -26,6 +27,18 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route
+              path="/detail/:jobId"
+              element={<Details isEdit={false} isInterviewEdit={false} />}
+            />
+            <Route
+              path="/detail/edit/:jobId"
+              element={<Details isEdit={true} isInterviewEdit={false} />}
+            />
+            <Route
+              path="/detail/editInt/:jobId"
+              element={<Details isEdit={false} isInterviewEdit={true} />}
+            />
           </Routes>
         </AuthContext.Provider>
       </header>

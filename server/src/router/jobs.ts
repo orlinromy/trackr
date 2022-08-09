@@ -6,6 +6,7 @@ const router = Router();
 const JobController = new JobsControllers();
 
 router.post("/job", auth, JobController.getAllJobs);
+router.post("/oneJob", auth, JobController.getOneJob);
 router.patch("/job", auth, JobController.editJob);
 router.patch("/status", auth, JobController.editJobStatus);
 router.put("/job", auth, JobController.createNewJob);

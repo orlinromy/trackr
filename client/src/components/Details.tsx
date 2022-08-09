@@ -4,6 +4,9 @@ import DetailsEdit from "./DetailsEdit";
 import DetailsInterviewView from "./DetailsInterviewView";
 import DetailsInterviewEdit from "./DetailsInterviewEdit";
 import Button from "@mui/material/Button";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { jobType } from "../types/type";
+import { useNavigate, useParams } from "react-router-dom";
 
 type detailsProps = {
   isEdit: boolean;
@@ -15,13 +18,21 @@ const Details = (props: detailsProps) => {
   const [isInterviewEdit, setIsInterviewEdit] = useState<boolean>(
     props.isInterviewEdit
   );
+  const params = useParams<string>();
+  const navigate = useNavigate();
+
+  function handleBack() {
+    navigate("/");
+  }
 
   return (
     <div>
-      <Button>Edit</Button>
-      <div className="job">{isEdit ? <DetailsView /> : <DetailsEdit />}</div>
+      <Button onClick={handleBack}>
+        <ArrowBackIcon></ArrowBackIcon>
+      </Button>
+      <div className="job">{isEdit ? <DetailsEdit /> : <DetailsView />}</div>
       <div className="interview">
-        {isInterviewEdit ? <DetailsInterviewView /> : <DetailsInterviewEdit />}
+        {isInterviewEdit ? <DetailsInterviewEdit /> : <DetailsInterviewView />}
       </div>
     </div>
   );
