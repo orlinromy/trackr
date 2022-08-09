@@ -23,6 +23,7 @@ const DetailsView = () => {
     application_date: "",
     hr_email: null,
   });
+
   const params = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -71,7 +72,13 @@ const DetailsView = () => {
   return (
     <div>
       <br />
-      <Button>Edit</Button>
+      <Button
+        onClick={() => {
+          navigate(`/detail/edit/${params.jobId}`);
+        }}
+      >
+        Edit
+      </Button>
 
       <h2>
         {isLoading ? <Skeleton animation="wave" width="20%" /> : job.title}
@@ -79,11 +86,17 @@ const DetailsView = () => {
       <table>
         <tr>
           <td>Company</td>
-          <td>{isLoading ? <Skeleton animation="wave" /> : job.company}</td>
+          <td>
+            {isLoading ? (
+              <Skeleton animation="wave" width="200px" />
+            ) : (
+              job.company
+            )}
+          </td>
         </tr>
         <tr>
           <td>Location</td>
-          <td>{job.location}</td>
+          <td>{isLoading ? <Skeleton animation="wave" /> : job.location}</td>
         </tr>
         <tr>
           <td>Job Description</td>
@@ -134,6 +147,24 @@ const DetailsView = () => {
               job.hr_email || (
                 <span style={{ color: "lightgrey" }}>No email set</span>
               )
+            )}
+          </td>
+        </tr>
+        <tr>
+          <td>Job Note</td>
+          <td>
+            {isLoading ? (
+              <Skeleton animation="wave" />
+            ) : (
+              <div
+                style={{
+                  border: "solid grey 0.5px",
+                  width: "400px",
+                  height: "300px",
+                }}
+              >
+                <p>{job.application_note}</p>
+              </div>
             )}
           </td>
         </tr>

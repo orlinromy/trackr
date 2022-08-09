@@ -36,7 +36,7 @@ function App() {
               element={<Details isEdit={true} isInterviewEdit={false} />}
             />
             <Route
-              path="/detail/editInt/:jobId"
+              path="/detail/editInt/:jobId/:intvId"
               element={<Details isEdit={false} isInterviewEdit={true} />}
             />
           </Routes>
