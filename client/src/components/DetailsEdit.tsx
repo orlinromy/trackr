@@ -16,7 +16,6 @@ const DetailsEdit = () => {
   const companyRef = useRef();
   const locationRef = useRef();
   const jdRef = useRef();
-  const statusRef = useRef();
   const applyDateRef = useRef();
   const hrEmailRef = useRef();
   const jobNoteRef = useRef();
@@ -262,7 +261,6 @@ const DetailsEdit = () => {
                 onChange={(object: any, value: any) => {
                   setStatus(value);
                 }}
-                ref={statusRef}
               />
             )}
           </td>
@@ -313,7 +311,7 @@ const DetailsEdit = () => {
                 id="filled-multiline-static"
                 multiline
                 rows={4}
-                defaultValue={job.application_note.split("T")[0]}
+                defaultValue={job.application_note}
                 variant="filled"
                 inputProps={{ style: { padding: 8 } }}
                 sx={{ width: "25vw" }}

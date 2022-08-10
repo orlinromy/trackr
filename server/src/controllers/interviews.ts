@@ -78,7 +78,7 @@ class InterviewsController {
           .json({ message: "editInterview not authorized" });
 
       const editInterviewSql: string =
-        "UPDATE interviews SET stage = $1, type = $2, date = $3, has_assignment = $4, assignment_details = $5, interview_note = $6 WHERE id = $7 RETURNING *;";
+        "UPDATE interviews SET stage = $1, type = $2, date = $3, has_assignment = $4, assignment_details = $5, interview_note = $6, interviewer_name = $7, interviewer_title = $8, interviewer_email = $9 WHERE id = $10 RETURNING *;";
 
       const { rows: interview } = await client.query(editInterviewSql, [
         req.body.stage,
@@ -87,12 +87,16 @@ class InterviewsController {
         req.body.has_assignment,
         req.body.assignment_details,
         req.body.interview_note,
+        req.body.interviewer_name,
+        req.body.interviewer_title,
+        req.body.interviewer_email,
         req.body.interview_id,
       ]);
 
       const access = res.getHeader("x-access-token");
       res.status(200).json({ interview, access });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ message: "Something went wrong" });
     } finally {
       client.release();

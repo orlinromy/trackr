@@ -63,11 +63,12 @@ const Details = (props: detailsProps) => {
         {props.isEdit ? <DetailsEdit /> : <DetailsView />}
       </div>
       <div className="interview">
-        {props.isInterviewEdit ? (
+        <DetailsInterviewView />
+        {/* {props.isInterviewEdit ? (
           <DetailsInterviewEdit />
         ) : (
           <DetailsInterviewView />
-        )}
+        )} */}
       </div>
     </div>
   );
