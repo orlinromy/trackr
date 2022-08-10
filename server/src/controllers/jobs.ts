@@ -35,7 +35,7 @@ class JobsController {
         req.body.jd_file || null,
         req.body.latest_status || "APPLIED",
         req.body.application_note || "",
-        req.body.application_date || new Date(),
+        req.body.application_date,
         req.body.hr_email || null,
         //@ts-ignore
         req.decoded.userId,
