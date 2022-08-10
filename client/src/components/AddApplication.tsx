@@ -103,34 +103,32 @@ const AddApplication = () => {
         )
       );
 
-      interviews.forEach(async (interview, idx) => {
-        const data = await axios.put(
-          "http://localhost:5001/interviews/interview",
-          {
-            refreshToken:
-              authCtx.credentials.refresh || localStorage.getItem("refresh"),
-            type: interview.type,
-            date: interview.date,
-            has_assignment: interview.has_assignment,
-            assignment_details: interview.assignment_details,
-            interview_note: interview.interview_note,
-            job_id: jobId,
-            interviewer_name: interview.interviewer_name,
-            interviewer_email: interview.interviewer_email,
-            interviewer_title: interview.interviewer_title,
-          }
-        );
-        console.log(idx, data.data);
-        if (idx === 0) {
-          if (data.data.access) {
-            authCtx.setCredentials({
-              ...authCtx.credentials,
-              access: data.data.access,
-            });
-            localStorage.setItem("access", data.data.access);
-          }
+      const data = await axios.put(
+        "http://localhost:5001/interviews/interview",
+        {
+          refreshToken:
+            authCtx.credentials.refresh || localStorage.getItem("refresh"),
+          job_id: jobId,
+          interviews,
+        },
+        {
+          headers: {
+            //@ts-ignore
+            Authorization:
+              authCtx.credentials.access || localStorage.getItem("access"),
+          },
         }
-      });
+      );
+      console.log(data.data);
+
+      if (data.data.access) {
+        authCtx.setCredentials({
+          ...authCtx.credentials,
+          access: data.data.access,
+        });
+        localStorage.setItem("access", data.data.access);
+      }
+
       navigate(`/detail/${jobId}`);
     } catch (error) {
       console.log(error);

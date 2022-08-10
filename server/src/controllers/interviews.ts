@@ -7,6 +7,7 @@ import { isAuthJob, isAuthInterview } from "../utils/utils";
 import { get } from "lodash";
 import * as dotenv from "dotenv";
 import { Client, PoolClient } from "pg";
+import format from "pg-format";
 dotenv.config();
 
 class InterviewsController {
@@ -21,6 +22,7 @@ class InterviewsController {
     // job_id
     const client: PoolClient = await pool.connect();
     try {
+      console.log(req.body);
       const isUsersJob = await isAuthJob(
         get(req, "decoded.userId"),
         req.body.job_id
@@ -35,27 +37,55 @@ class InterviewsController {
         req.body.job_id,
       ]);
 
-      const currInterviewStage: number =
-        parseInt(maxInterviewStage[0]?.last_stage) + 1 || 1;
+      let currInterviewStage: number =
+        parseInt(maxInterviewStage[0]?.last_stage) || 0;
+
+      const inputInterviews = req.body.interviews
+        .sort(
+          (a: any, b: any) =>
+            new Date(a.date).getTime() - new Date(b.date).getTime()
+        )
+        .map((interview: any) => {
+          currInterviewStage = currInterviewStage + 1;
+          return [
+            currInterviewStage,
+            interview.type,
+            interview.date,
+            interview.has_assignment || false,
+            interview.assignment_details || null,
+            interview.interview_note || null,
+            req.body.job_id,
+            interview.interviewer_name || null,
+            interview.interviewer_title || null,
+            interview.interviewer_email || null,
+          ];
+        });
+
+      console.log(inputInterviews);
 
       const newInterviewSql: string =
-        "INSERT INTO interviews(stage, type, date, has_assignment, assignment_details, interview_note, job_id, interviewer_name, interviewer_title, interviewer_email) VALUES ($1, $2, DATE($3), $4, $5, $6, $7, $8, $9, $10) RETURNING *;";
+        // "INSERT INTO interviews(stage, type, date, has_assignment, assignment_details, interview_note, job_id, interviewer_name, interviewer_title, interviewer_email) VALUES ($1, $2, DATE($3), $4, $5, $6, $7, $8, $9, $10) RETURNING *;";
+        "INSERT INTO interviews(stage, type, date, has_assignment, assignment_details, interview_note, job_id, interviewer_name, interviewer_title, interviewer_email) VALUES %L RETURNING *;";
 
-      const { rows: newInterview } = await client.query(newInterviewSql, [
-        req.body.stage || currInterviewStage,
-        req.body.type,
-        req.body.date || new Date(),
-        req.body.has_assignment || false,
-        req.body.assignment_details || null,
-        req.body.interview_note || null,
-        req.body.job_id,
-        req.body.interviewer_name || null,
-        req.body.interviewer_title || null,
-        req.body.interviewer_email || null,
-      ]);
+      const { rows: newInterviews } = await client.query(
+        format(newInterviewSql, inputInterviews),
+        []
+      );
+      // const { rows: newInterview } = await client.query(newInterviewSql, [
+      //   req.body.stage || currInterviewStage,
+      //   req.body.type,
+      //   req.body.date || new Date(),
+      //   req.body.has_assignment || false,
+      //   req.body.assignment_details || null,
+      //   req.body.interview_note || null,
+      //   req.body.job_id,
+      //   req.body.interviewer_name || null,
+      //   req.body.interviewer_title || null,
+      //   req.body.interviewer_email || null,
+      // ]);
 
       const access = res.getHeader("x-access-token");
-      res.status(200).json({ newInterview, access });
+      res.status(200).json({ newInterviews, access });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Something went wrong" });

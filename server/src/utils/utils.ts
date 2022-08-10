@@ -80,7 +80,7 @@ async function reIssueAccessToken({ refreshToken }: { refreshToken: string }) {
   const accessToken = jwt.sign(
     omit(decoded as object, ["jti", "exp", "iat"]),
     process.env.ACCESS_SECRET as string,
-    { expiresIn: "10s", jwtid: uuidv4() } // 15 minutes
+    { expiresIn: "3d", jwtid: uuidv4() } // 15 minutes
   );
   client.release();
   return accessToken;

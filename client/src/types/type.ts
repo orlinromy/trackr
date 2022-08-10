@@ -33,7 +33,7 @@ type jobType = {
 
 type interviewType = {
   id: string;
-  stage: number;
+  stage: number | null;
   type: string;
   date: string;
   has_assignment: boolean;

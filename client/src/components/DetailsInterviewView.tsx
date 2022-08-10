@@ -150,7 +150,7 @@ const DetailsInterviewView = () => {
   function handleUndo() {
     setInterviews((prevState) =>
       [...prevState, deletedInterview as interviewType].sort(
-        (a, b) => a.stage - b.stage
+        (a, b) => (a.stage as number) - (b.stage as number)
       )
     );
   }

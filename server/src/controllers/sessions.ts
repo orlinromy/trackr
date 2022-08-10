@@ -54,7 +54,7 @@ class SessionsController {
       };
 
       const access = jwt.sign(payload, process.env.ACCESS_SECRET as string, {
-        expiresIn: "10s",
+        expiresIn: "3d",
         jwtid: uuidv4(),
       });
 
