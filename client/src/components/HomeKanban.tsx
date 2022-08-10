@@ -6,9 +6,8 @@ import {
   Droppable,
   DropResult,
 } from "react-beautiful-dnd";
-import { v4 as uuid } from "uuid";
 import AuthContext from "../context/AuthContext";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { jobType, interviewType } from "../types/type";
 import { useNavigate } from "react-router-dom";
 import BusinessIcon from "@mui/icons-material/Business";
@@ -43,6 +42,60 @@ const HomeKanban = () => {
   const [interviewJobId, setInterviewJobId] = useState<string>("");
   const [isDeleteClicked, setIsDeleteClicked] = useState<boolean>(false);
   const [selectedId, setSelectedId] = useState<string>("");
+
+  const [isUpdateApplyDate, setIsUpdateApplydate] = useState<boolean>(false);
+  const [jobUpdateDate, setJobUpdateDate] = useState<jobType>();
+
+  function handleUpdateApplyClose() {
+    setIsUpdateApplydate(false);
+    setJobUpdateDate(undefined);
+  }
+
+  async function updateApplyDate() {
+    try {
+      // (jobUpdateDate as jobType).application_date = new Date(Date.now()).toISOString().split("T")[0];
+
+      const data = await axios.patch(
+        "http://localhost:5001/jobs/job",
+        {
+          refreshToken:
+            authCtx.credentials.refresh || localStorage.getItem("refresh"),
+          jobId: (jobUpdateDate as jobType).id,
+          title: (jobUpdateDate as jobType).title,
+          company: (jobUpdateDate as jobType).company,
+          location: (jobUpdateDate as jobType).location,
+          jd_link: (jobUpdateDate as jobType).jd_link,
+          jd_file: (jobUpdateDate as jobType).jd_file,
+          latest_status: "APPLIED",
+          application_date: new Date(Date.now()).toISOString().split("T")[0],
+          hr_email: (jobUpdateDate as jobType).hr_email,
+          application_note: (jobUpdateDate as jobType).application_note,
+        },
+        {
+          headers: {
+            //@ts-ignore
+            Authorization:
+              authCtx.credentials.access || localStorage.getItem("access"),
+          },
+        }
+      );
+      console.log(data.data);
+
+      if (data.data.access) {
+        authCtx.setCredentials({
+          ...authCtx.credentials,
+          access: data.data.access,
+        });
+        localStorage.setItem("access", data.data.access);
+      }
+      handleUpdateApplyClose();
+    } catch (error: any) {
+      console.log(error);
+      if (error.response.data.message === "log in required") {
+        navigate("/login");
+      }
+    }
+  }
 
   function handleDelete(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -224,6 +277,40 @@ const HomeKanban = () => {
     setInterviewJobId("");
   }
 
+  async function updateStatus(job: jobType, newStatus: string) {
+    try {
+      const data = await axios.patch(
+        "http://localhost:5001/jobs/status",
+        {
+          refreshToken:
+            authCtx.credentials.refresh || localStorage.getItem("refresh"),
+          latest_status: newStatus,
+          jobId: job.id,
+        },
+        {
+          headers: {
+            //@ts-ignore
+            Authorization:
+              authCtx.credentials.access || localStorage.getItem("access"),
+          },
+        }
+      );
+      console.log(data.data);
+      if (data.data.access) {
+        authCtx.setCredentials({
+          ...authCtx.credentials,
+          access: data.data.access,
+        });
+        localStorage.setItem("access", data.data.access);
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.response.data.message === "log in required") {
+        navigate("/login");
+      }
+    }
+  }
+
   const onDragEnd = (result: DropResult, columns: any, setColumns: any) => {
     if (!result.destination) return;
     const { source, destination } = result;
@@ -245,9 +332,17 @@ const HomeKanban = () => {
           items: destItems,
         },
       });
+
+      updateStatus(removed, destination.droppableId);
+
       if (destination.droppableId === "INTERVIEW") {
         addANewInterview(removed);
-      } else if (destination.droppableId === "APPLIED") {
+      } else if (
+        source.droppableId === "WISHLIST" &&
+        destination.droppableId === "APPLIED"
+      ) {
+        setIsUpdateApplydate(true);
+        setJobUpdateDate(removed);
       }
     } else {
       const column = columns[source.droppableId];
@@ -555,6 +650,21 @@ const HomeKanban = () => {
         <DialogActions>
           <Button onClick={handleDeleteClose}>No</Button>
           <Button onClick={deleteEntry}>Yes</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={isUpdateApplyDate}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleUpdateApplyClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>
+          Would you like to use today's date as application date?
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleUpdateApplyClose}>No</Button>
+          <Button onClick={updateApplyDate}>Yes</Button>
         </DialogActions>
       </Dialog>
     </>
