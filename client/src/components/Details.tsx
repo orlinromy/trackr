@@ -64,11 +64,6 @@ const Details = (props: detailsProps) => {
       </div>
       <div className="interview">
         <DetailsInterviewView />
-        {/* {props.isInterviewEdit ? (
-          <DetailsInterviewEdit />
-        ) : (
-          <DetailsInterviewView />
-        )} */}
       </div>
     </div>
   );

@@ -91,7 +91,7 @@ const DetailsInterviewView = () => {
       }
       setInterviews(data.data.interview);
       // await getAllInterviews();
-      setTimeout(() => setIsLoading(false), 1500);
+      setTimeout(() => setIsLoading(false), 500);
     } catch (error: any) {
       console.log(error);
       if (error.response.data.message === "log in required") {
@@ -253,8 +253,11 @@ const DetailsInterviewView = () => {
       );
       setEditInterview(null);
       getOneJobInterviews();
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      if (error.response.data.message === "log in required") {
+        navigate("/login");
+      }
     }
   }
 
@@ -293,7 +296,6 @@ const DetailsInterviewView = () => {
 
   return (
     <>
-      <Button>Edit</Button>
       <h3>Interviews</h3>
 
       {!isLoading && interviews.length === 0 ? (

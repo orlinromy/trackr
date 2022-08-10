@@ -26,7 +26,7 @@ type jobType = {
   jd_link: string | null;
   jd_file: string | null;
   latest_status: string;
-  application_note: string;
+  application_note: string | null;
   application_date: string;
   hr_email: string | null;
 };

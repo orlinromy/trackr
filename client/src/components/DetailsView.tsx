@@ -56,7 +56,7 @@ const DetailsView = () => {
         localStorage.setItem("access", data.data.access);
       }
       setJob(data.data.jobs);
-      setTimeout(() => setIsLoading(false), 2000);
+      setTimeout(() => setIsLoading(false), 500);
     } catch (error: any) {
       console.log(error);
       if (error.response.data.message === "log in required") {
@@ -159,11 +159,12 @@ const DetailsView = () => {
               <div
                 style={{
                   border: "solid grey 0.5px",
+                  borderRadius: "10px",
                   width: "400px",
                   height: "300px",
                 }}
               >
-                <p>{job.application_note}</p>
+                <p style={{ margin: "10px" }}>{job.application_note}</p>
               </div>
             )}
           </td>

@@ -8,6 +8,7 @@ import { Routes, Route } from "react-router-dom";
 import AuthContext from "./context/AuthContext";
 import * as customType from "./types/type";
 import Navbar from "./components/Navbar";
+import AddApplication from "./components/AddApplication";
 
 function App() {
   const authCtxDefaultValue = {
@@ -39,6 +40,7 @@ function App() {
               path="/detail/editInt/:jobId/:intvId"
               element={<Details isEdit={false} isInterviewEdit={true} />}
             />
+            <Route path="/new" element={<AddApplication />} />
           </Routes>
         </AuthContext.Provider>
       </header>

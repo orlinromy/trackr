@@ -6,10 +6,6 @@ import { decode, reIssueAccessToken } from "../utils/utils";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-function timeout(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 const checkTokenValidity = async (
   req: Request,
   res: Response,
@@ -37,10 +33,6 @@ const checkTokenValidity = async (
 
   if (expired && refreshToken) {
     console.log("expired");
-    // const newAccessToken: any = await Promise.all([
-    //   reIssueAccessToken({ refreshToken }),
-    //   timeout(2000),
-    // ]);
     const newAccessToken: any = await reIssueAccessToken({ refreshToken });
     console.log(typeof newAccessToken);
     // reIssueAccessToken({ refreshToken });

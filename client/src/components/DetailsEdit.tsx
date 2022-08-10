@@ -81,7 +81,7 @@ const DetailsEdit = () => {
         localStorage.setItem("access", data.data.access);
       }
       setJob(data.data.jobs);
-      setTimeout(() => setIsLoading(false), 2000);
+      setTimeout(() => setIsLoading(false), 500);
     } catch (error: any) {
       console.log(error);
       if (error.response.data.message === "log in required") {
@@ -104,7 +104,7 @@ const DetailsEdit = () => {
           location: inputData.location,
           jd_link: inputData.jd_link,
           jd_file: inputData.jd_file,
-          latest_status: inputData.latest_status,
+          latest_status: inputData.latest_status || job.latest_status,
           application_date: inputData.application_date,
           hr_email: inputData.hr_email,
           application_note: inputData.application_note,
