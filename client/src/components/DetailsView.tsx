@@ -126,7 +126,7 @@ const DetailsView = () => {
           <td>
             {isLoading ? (
               <Skeleton animation="wave" />
-            ) : (
+            ) : job.application_date ? (
               new Date(job.application_date)
                 .toLocaleDateString("en-GB", {
                   weekday: "long",
@@ -135,6 +135,10 @@ const DetailsView = () => {
                   year: "numeric",
                 })
                 .replace(/ /g, " ")
+            ) : (
+              <p style={{ display: "inline", color: "lightgrey" }}>
+                Not applied yet
+              </p>
             )}
           </td>
         </tr>

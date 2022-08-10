@@ -95,42 +95,46 @@ const AddApplication = () => {
     setInterviews(newState);
   }
   async function addNewInterviews(jobId: string) {
-    console.log("adding new interviews");
-    setInterviews((prevState) =>
-      prevState.sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-      )
-    );
-
-    interviews.forEach(async (interview, idx) => {
-      const data = await axios.put(
-        "http://localhost:5001/interviews/interview",
-        {
-          refreshToken:
-            authCtx.credentials.refresh || localStorage.getItem("refresh"),
-          type: interview.type,
-          date: interview.date,
-          has_assignment: interview.has_assignment,
-          assignment_details: interview.assignment_details,
-          interview_note: interview.interview_note,
-          job_id: jobId,
-          interviewer_name: interview.interviewer_name,
-          interviewer_email: interview.interviewer_email,
-          interviewer_title: interview.interviewer_title,
-        }
+    try {
+      console.log("adding new interviews");
+      setInterviews((prevState) =>
+        prevState.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        )
       );
-      console.log(idx, data.data);
-      if (idx === 0) {
-        if (data.data.access) {
-          authCtx.setCredentials({
-            ...authCtx.credentials,
-            access: data.data.access,
-          });
-          localStorage.setItem("access", data.data.access);
+
+      interviews.forEach(async (interview, idx) => {
+        const data = await axios.put(
+          "http://localhost:5001/interviews/interview",
+          {
+            refreshToken:
+              authCtx.credentials.refresh || localStorage.getItem("refresh"),
+            type: interview.type,
+            date: interview.date,
+            has_assignment: interview.has_assignment,
+            assignment_details: interview.assignment_details,
+            interview_note: interview.interview_note,
+            job_id: jobId,
+            interviewer_name: interview.interviewer_name,
+            interviewer_email: interview.interviewer_email,
+            interviewer_title: interview.interviewer_title,
+          }
+        );
+        console.log(idx, data.data);
+        if (idx === 0) {
+          if (data.data.access) {
+            authCtx.setCredentials({
+              ...authCtx.credentials,
+              access: data.data.access,
+            });
+            localStorage.setItem("access", data.data.access);
+          }
         }
-      }
-    });
-    navigate(`/detail/${jobId}`);
+      });
+      navigate(`/detail/${jobId}`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function addNewApplication(inputData: Omit<jobType, "id">) {
@@ -169,9 +173,16 @@ const AddApplication = () => {
       console.log(data.data);
       console.log("adding new application successful");
 
-      addNewInterviews(data.data.newJob.id);
-    } catch (error) {
+      if (interviews.length !== 0) {
+        addNewInterviews(data.data.newJob[0].id);
+      } else {
+        navigate(`/detail/${data.data.newJob[0].id}`);
+      }
+    } catch (error: any) {
       console.log(error);
+      if (error.response.data.message === "log in required") {
+        navigate("/login");
+      }
     }
   }
 
@@ -184,8 +195,11 @@ const AddApplication = () => {
     // const hr_email = hrEmailRef.current!.value;
     // const application_note = jobNoteRef.current!.value;
     // const latest_status = status;
-
-    addNewApplication(job);
+    if (!job.title || !job.company) {
+      alert("Please input the job title and the company");
+    } else {
+      addNewApplication(job);
+    }
   }
 
   function handleJobChange(

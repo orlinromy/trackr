@@ -24,6 +24,9 @@ class JobsController {
     // user_id
     const client: PoolClient = await pool.connect();
     try {
+      if (req.body.application_date === "") {
+        req.body.application_date = null;
+      }
       const newJobSql: string =
         "INSERT INTO applications(title, company, location, jd_link, jd_file, latest_status, application_note, application_date, hr_email, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, DATE($8), $9, $10) RETURNING *;";
 

@@ -249,14 +249,20 @@ const HomeTable = () => {
                 <Chip label={data.latest_status} />
               </TableCell>
               <TableCell>
-                {new Date(data.application_date)
-                  .toLocaleDateString("en-GB", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })
-                  .replace(/ /g, " ")}
+                {data.application_date ? (
+                  new Date(data.application_date)
+                    .toLocaleDateString("en-GB", {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })
+                    .replace(/ /g, " ")
+                ) : (
+                  <p style={{ display: "inline", color: "lightgray" }}>
+                    Not applied yet
+                  </p>
+                )}
               </TableCell>
               <TableCell>
                 {setInterviewDate(data.id) ? (
