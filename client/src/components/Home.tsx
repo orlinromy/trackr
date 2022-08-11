@@ -25,22 +25,38 @@ const Home = () => {
 
   return (
     <div>
-      <ButtonGroup
-        variant="outlined"
-        aria-label="outlined primary button group"
-      >
-        <Button variant="contained" onClick={navigateNew}>
-          {" "}
-          + Add New Application
-        </Button>
-        <Button onClick={setMode} id="table" disabled={viewMode === "table"}>
-          <TocIcon />
-        </Button>
-        <Button onClick={setMode} id="kanban" disabled={viewMode === "kanban"}>
-          <ViewKanbanIcon />
-        </Button>
-      </ButtonGroup>
-      {viewMode === "table" ? <HomeTable /> : <HomeKanban />}
+      <div>
+        <div className="flex justify-between w-[90%] mx-auto">
+          <Button
+            variant="contained"
+            onClick={navigateNew}
+            className="bg-sky-600 hover:bg-sky-500"
+          >
+            {" "}
+            + Add New Application
+          </Button>
+          <ButtonGroup
+            variant="outlined"
+            aria-label="outlined primary button group"
+          >
+            <Button
+              onClick={setMode}
+              id="table"
+              disabled={viewMode === "table"}
+            >
+              <TocIcon />
+            </Button>
+            <Button
+              onClick={setMode}
+              id="kanban"
+              disabled={viewMode === "kanban"}
+            >
+              <ViewKanbanIcon />
+            </Button>
+          </ButtonGroup>
+        </div>
+        {viewMode === "table" ? <HomeTable /> : <HomeKanban />}
+      </div>
     </div>
   );
 };

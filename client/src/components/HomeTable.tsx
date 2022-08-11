@@ -19,19 +19,12 @@ import Divider from "@mui/material/Divider";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import Paper from "@mui/material/Paper";
-import Slide, { SlideProps } from "@mui/material/Slide";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { jobType, interviewType } from "../types/type";
-
-const Transition = React.forwardRef(function Transition(
-  props: SlideProps,
-  ref
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { Box } from "@mui/material";
+import { visuallyHidden } from "@mui/utils";
 
 const HomeTable = () => {
   const authCtx = useContext(AuthContext);
@@ -45,6 +38,16 @@ const HomeTable = () => {
   const [jobs, setJobs] = useState<jobType[]>([]);
   const [interviews, setInterviews] = useState<interviewType[]>([]);
   const open = Boolean(anchorEl);
+  const [orderBy, setOrderBy] = React.useState<
+    "applyDate" | "upcomingInterviews"
+  >("applyDate");
+  const [order, setOrder] = React.useState<"asc" | "desc">("asc");
+
+  const createSortHandler =
+    (property: "applyData" | "upcomingInterview") =>
+    (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property);
+    };
 
   const openMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -219,144 +222,169 @@ const HomeTable = () => {
   // }
 
   return (
+    // // <div >
+    //   /* <Button variant="contained" onClick={navigateNew}>
+    //     {" "}
+    //     + Add New Application
+    //   </Button> */
     <div>
-      {/* <Button variant="contained" onClick={navigateNew}>
-        {" "}
-        + Add New Application
-      </Button> */}
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Job Title</TableCell>
-            <TableCell>Company</TableCell>
-            <TableCell>Location</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Apply Date</TableCell>
-            <TableCell>Upcoming Interview</TableCell>
-            <TableCell>Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {jobs.length === 0 && (
-            <TableCell colSpan={7}>Nothing is here yet...</TableCell>
-          )}
-          {jobs.map((data, index) => (
-            <TableRow id={data.id} key={index}>
-              <TableCell>{data.title}</TableCell>
-              <TableCell>{data.company}</TableCell>
-              <TableCell>{data.location}</TableCell>
-              <TableCell>
-                <Chip label={data.latest_status} />
-              </TableCell>
-              <TableCell>
-                {data.application_date ? (
-                  new Date(data.application_date)
-                    .toLocaleDateString("en-GB", {
-                      weekday: "long",
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                    })
-                    .replace(/ /g, " ")
-                ) : (
-                  <p style={{ display: "inline", color: "lightgray" }}>
-                    Not applied yet
-                  </p>
-                )}
-              </TableCell>
-              <TableCell>
-                {setInterviewDate(data.id) ? (
-                  <Tooltip
-                    disableFocusListener
-                    placement="bottom"
-                    title={
-                      <span style={{ whiteSpace: "pre-line" }}>
-                        {setInterviewDetail(data.id)}
-                      </span>
-                    }
-                    arrow
+      <div className="w-[95%] min-h-[90vh] border rounded-xl shadow-2xl mx-auto my-10">
+        <div className="w-[95%] mx-auto py-10">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="text-lg">Job Title</TableCell>
+                <TableCell className="text-lg">Company</TableCell>
+                <TableCell className="text-lg">Location</TableCell>
+                <TableCell className="text-lg">Status</TableCell>
+                <TableCell className="text-lg">
+                  <TableSortLabel
+                    active={orderBy === "applyDate"}
+                    direction={orderBy === "applyDate" ? order : "asc"}
+                    onClick={createSortHandler("applyDate")}
                   >
-                    <span>
-                      {new Date(
-                        setInterviewDate(data.id).date
-                      ).toLocaleDateString("en-GB", {
-                        weekday: "long",
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </span>
-                  </Tooltip>
-                ) : (
-                  <Tooltip
-                    disableFocusListener
-                    placement="bottom"
-                    title="Add an interview"
-                    arrow
-                  >
-                    <a href="#">
-                      <span style={{ color: "lightgrey" }}>
-                        No interview set
-                      </span>
-                    </a>
-                  </Tooltip>
-                )}
-              </TableCell>
-              <TableCell>
-                <Button
-                  id={data.id}
-                  aria-controls={open ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={openMenu}
-                >
-                  <MoreVertIcon />
-                </Button>
+                    Apply Date
+                    {orderBy === "applyDate" ? (
+                      <Box component="span" sx={visuallyHidden}>
+                        {order === "desc"
+                          ? "sorted descending"
+                          : "sorted ascending"}
+                      </Box>
+                    ) : null}
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell className="text-lg">Upcoming Interview</TableCell>
+                <TableCell className="text-lg">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {jobs.length === 0 && (
+                <TableCell colSpan={7}>Nothing is here yet...</TableCell>
+              )}
+              {jobs.map((data, index) => (
+                <TableRow id={data.id} key={index}>
+                  <TableCell>{data.title}</TableCell>
+                  <TableCell>{data.company}</TableCell>
+                  <TableCell>{data.location}</TableCell>
+                  <TableCell>
+                    <Chip label={data.latest_status} />
+                  </TableCell>
+                  <TableCell>
+                    {data.application_date ? (
+                      new Date(data.application_date)
+                        .toLocaleDateString("en-GB", {
+                          weekday: "long",
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })
+                        .replace(/ /g, " ")
+                    ) : (
+                      <p style={{ display: "inline", color: "lightgray" }}>
+                        Not applied yet
+                      </p>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {setInterviewDate(data.id) ? (
+                      <Tooltip
+                        disableFocusListener
+                        placement="bottom"
+                        title={
+                          <span style={{ whiteSpace: "pre-line" }}>
+                            {setInterviewDetail(data.id)}
+                          </span>
+                        }
+                        arrow
+                      >
+                        <span>
+                          {new Date(
+                            setInterviewDate(data.id).date
+                          ).toLocaleDateString("en-GB", {
+                            weekday: "long",
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        disableFocusListener
+                        placement="bottom"
+                        title="Add an interview"
+                        arrow
+                      >
+                        <a href="#">
+                          <span style={{ color: "lightgrey" }}>
+                            No interview set
+                          </span>
+                        </a>
+                      </Tooltip>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      id={data.id}
+                      aria-controls={open ? "basic-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={openMenu}
+                    >
+                      <MoreVertIcon />
+                    </Button>
 
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleMenuClose}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                  PaperProps={{
-                    style: {
-                      width: `150px`,
-                    },
-                  }}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  elevation={1}
-                >
-                  <MenuList dense>
-                    <MenuItem id={data.id} onClick={handleDetails}>
-                      <ListItemText>Details</ListItemText>
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem id={data.id} onClick={handleDelete}>
-                      <ListItemText sx={{ color: "red" }}>Delete</ListItemText>
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleMenuClose}
+                      MenuListProps={{
+                        "aria-labelledby": "basic-button",
+                      }}
+                      PaperProps={{
+                        style: {
+                          width: `150px`,
+                        },
+                      }}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "right",
+                      }}
+                      elevation={1}
+                    >
+                      <MenuList dense>
+                        <MenuItem id={data.id} onClick={handleDetails}>
+                          <ListItemText>Details</ListItemText>
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem id={data.id} onClick={handleDelete}>
+                          <ListItemText sx={{ color: "red" }}>
+                            Delete
+                          </ListItemText>
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
       <Dialog
         open={isDeleteClicked}
-        TransitionComponent={Transition}
         keepMounted
         onClose={handleDeleteClose}
         aria-describedby="alert-dialog-slide-description"
+        className="backdrop-blur-sm"
+        componentsProps={{
+          backdrop: { style: { backgroundColor: "rgba(0,0,0,0.15)" } },
+        }}
       >
         <DialogTitle>Are you sure you want to delete?</DialogTitle>
         <DialogActions>

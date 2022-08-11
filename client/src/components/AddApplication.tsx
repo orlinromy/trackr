@@ -39,14 +39,14 @@ const AddApplication = () => {
   };
 
   const [interviews, setInterviews] = useState<interviewType[]>([]);
-  const titleRef = useRef<HTMLInputElement | null>(null);
-  const companyRef = useRef<HTMLInputElement | null>(null);
-  const locationRef = useRef<HTMLInputElement | null>(null);
-  const jdRef = useRef<HTMLInputElement | null>(null);
-  const applyDateRef = useRef<HTMLInputElement | null>(null);
-  const hrEmailRef = useRef<HTMLInputElement | null>(null);
-  const jobNoteRef = useRef<HTMLInputElement | null>(null);
-  const [status, setStatus] = useState(job.latest_status);
+  // const titleRef = useRef<HTMLInputElement | null>(null);
+  // const companyRef = useRef<HTMLInputElement | null>(null);
+  // const locationRef = useRef<HTMLInputElement | null>(null);
+  // const jdRef = useRef<HTMLInputElement | null>(null);
+  // const applyDateRef = useRef<HTMLInputElement | null>(null);
+  // const hrEmailRef = useRef<HTMLInputElement | null>(null);
+  // const jobNoteRef = useRef<HTMLInputElement | null>(null);
+  // const [status, setStatus] = useState(job.latest_status);
   const applicationStatuses: string[] = [
     "WISHLIST",
     "APPLIED",
@@ -218,6 +218,15 @@ const AddApplication = () => {
     <div>
       <Button variant="contained" sx={{ width: "50px" }} onClick={handleSubmit}>
         Save
+      </Button>
+      <Button
+        variant="contained"
+        sx={{ width: "50px" }}
+        onClick={() => {
+          navigate("/");
+        }}
+      >
+        Cancel
       </Button>
       <div>
         <TextField
