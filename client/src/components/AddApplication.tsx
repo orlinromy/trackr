@@ -6,6 +6,17 @@ import { jobType, interviewType } from "../types/type";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import BusinessIcon from "@mui/icons-material/Business";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import DescriptionIcon from "@mui/icons-material/Description";
+import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import NotesIcon from "@mui/icons-material/Notes";
+import WorkIcon from "@mui/icons-material/Work";
+import Divider from "@mui/material/Divider";
 
 const AddApplication = () => {
   const navigate = useNavigate();
@@ -216,292 +227,373 @@ const AddApplication = () => {
   }
   return (
     <div>
-      <Button variant="contained" sx={{ width: "50px" }} onClick={handleSubmit}>
-        Save
-      </Button>
-      <Button
-        variant="contained"
-        sx={{ width: "50px" }}
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        Cancel
-      </Button>
+      <Navbar />
       <div>
-        <TextField
-          id="title"
-          placeholder="Job Title"
-          // defaultValue={job.title}
-          value={job.title}
-          onChange={(e) => {
-            handleJobChange(e);
+        <Button
+          className="pl-5"
+          onClick={() => {
+            navigate("/");
           }}
-          variant="filled"
-          // inputRef={titleRef}
-          inputProps={{ style: { padding: 8 } }}
-          sx={{ width: "25vw" }}
-        />
+          startIcon={<ArrowBackIcon />}
+        >
+          Back to Dashboard
+        </Button>
       </div>
-
-      <table>
-        <tbody>
-          <tr>
-            <td>Company</td>
-            <td>
-              <TextField
-                id="company"
-                placeholder="Company"
-                // defaultValue={job.company}
-                value={job.company}
-                onChange={(e) => {
-                  handleJobChange(e);
-                }}
-                variant="filled"
-                // inputRef={companyRef}
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Location</td>
-            <td>
-              <TextField
-                id="location"
-                placeholder="Location (e.g. Singapore)"
-                // defaultValue={job.location}
-                value={job.location}
-                onChange={(e) => {
-                  handleJobChange(e);
-                }}
-                variant="filled"
-                // inputRef={locationRef}
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Job Description</td>
-            <td>
-              <TextField
-                id="jd_link"
-                placeholder="Link to Job Description"
-                // defaultValue={job.jd_link}
-                value={job.jd_link}
-                onChange={(e) => {
-                  handleJobChange(e);
-                }}
-                variant="filled"
-                // inputRef={jdRef}
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-              ></TextField>
-            </td>
-          </tr>
-          <tr>
-            <td>Status</td>
-            <td>
-              <Autocomplete
-                {...defaultProps}
-                renderInput={(params: any) => (
-                  <TextField {...params} variant="standard" />
-                )}
-                id="latest_status"
-                // defaultValue={job.latest_status}
-                value={job.latest_status}
-                onChange={(
-                  e: React.SyntheticEvent<Element, Event>,
-                  value: any
-                ) => {
-                  setJob((prevState: jobType) => {
-                    const newState = JSON.parse(JSON.stringify(prevState));
-                    newState.latest_status = value;
-                    if (value === "WISHLIST") {
-                      newState.application_date = "";
-                    }
-                    // console.log(newState);
-                    return newState;
-                  });
-                }}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td>Apply Date</td>
-            <td>
-              <TextField
-                id="application_date"
-                // defaultValue={job.application_date.split("T")[0]}
-                value={job.application_date.split("T")[0]}
-                onChange={(e) => {
-                  handleJobChange(e);
-                }}
-                placeholder="Apply date"
-                variant="filled"
-                inputProps={{ style: { padding: 8 } }}
-                type="date"
-                // inputRef={applyDateRef}
-                sx={{ width: "25vw" }}
-              ></TextField>
-            </td>
-          </tr>
-          <tr>
-            <td>Contact Person</td>
-            <td>
-              <TextField
-                id="hr_email"
-                // defaultValue={job.hr_email}
-                value={job.hr_email}
-                onChange={(e) => {
-                  handleJobChange(e);
-                }}
-                variant="filled"
-                placeholder="HR email"
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-                type="email"
-                // inputRef={hrEmailRef}
-              ></TextField>
-            </td>
-          </tr>
-          <tr>
-            <td>Job Note</td>
-            <td>
-              <TextField
-                id="application_note"
-                multiline
-                rows={4}
-                placeholder="More details about the job"
-                // defaultValue={job.application_note}
-                value={job.application_note}
-                onChange={(e) => {
-                  handleJobChange(e);
-                }}
-                variant="filled"
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-                // inputRef={jobNoteRef}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <h3>Interview</h3>
-      <Button variant="contained" onClick={addNewInterviewField}>
-        Add New Interview
-      </Button>
-      {interviews.map((interview, idx) => (
-        <>
-          <table key={idx} style={{ textAlign: "center", width: "50%" }}>
-            <thead>
-              <tr>
-                <td>Type</td>
-                <td>Date</td>
-                <td>Interviewer Name</td>
-                <td>Interviewer Email</td>
-                <td>Interviewer Title</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <Autocomplete
-                    {...interviewDefaultProps}
-                    renderInput={(params: any) => (
-                      <TextField {...params} variant="standard" />
-                    )}
-                    id="type"
-                    // defaultValue={interview.type}
-                    value={interview.type}
-                    onChange={(
-                      e: React.SyntheticEvent<Element, Event>,
-                      value: any
-                    ) => {
-                      setInterviews((prevState: interviewType[]) => {
-                        const newState = JSON.parse(JSON.stringify(prevState));
-                        newState[idx].type = value;
-                        console.log(newState);
-                        return newState;
-                      });
-                    }}
-                    sx={{ width: "20vw" }}
-                  />
-                </td>
-                <td>
-                  <TextField
-                    id="date"
-                    // defaultValue={interview.date.split("T")[0]}
-                    variant="filled"
-                    inputProps={{ style: { padding: 8 } }}
-                    type="date"
-                    sx={{ width: "20vw" }}
-                    value={interview.date}
-                    onChange={(e) => {
-                      handleChange(idx, e);
-                    }}
-                  ></TextField>
-                </td>
-                <td>
-                  <TextField
-                    id="interviewer_name"
-                    // defaultValue={interview.interviewer_name}
-                    variant="filled"
-                    inputProps={{ style: { padding: 8 } }}
-                    sx={{ width: "20vw" }}
-                    value={interview.interviewer_name}
-                    onChange={(e) => {
-                      handleChange(idx, e);
-                    }}
-                  ></TextField>
-                </td>
-                <td>
-                  <TextField
-                    id="interviewer_email"
-                    // defaultValue={interview.interviewer_email}
-                    variant="filled"
-                    inputProps={{ style: { padding: 8 } }}
-                    sx={{ width: "20vw" }}
-                    type="email"
-                    value={interview.interviewer_email}
-                    onChange={(e) => {
-                      handleChange(idx, e);
-                    }}
-                  ></TextField>
-                </td>
-                <td>
-                  <TextField
-                    id="interviewer_title"
-                    // defaultValue={interview.interviewer_title}
-                    variant="filled"
-                    inputProps={{ style: { padding: 8 } }}
-                    sx={{ width: "20vw" }}
-                    value={interview.interviewer_title}
-                    onChange={(e) => {
-                      handleChange(idx, e);
-                    }}
-                  ></TextField>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <p style={{ fontWeight: "bold" }}>Interview notes</p>
+      <div className="pl-36 mt-[20px]">
+        <Button
+          variant="contained"
+          sx={{ width: "50px" }}
+          onClick={handleSubmit}
+        >
+          Save
+        </Button>
+        <Button
+          sx={{ width: "50px" }}
+          onClick={() => {
+            navigate("/");
+          }}
+          className="ml-4"
+        >
+          Cancel
+        </Button>
+        {/*         
+        <div>
           <TextField
-            id="interview_note"
-            multiline
-            rows={4}
-            // defaultValue={interview.interview_note}
-            value={interview.interview_note}
+            id="title"
+            placeholder="Job Title"
+            // defaultValue={job.title}
+            value={job.title}
             onChange={(e) => {
-              handleChange(idx, e);
+              handleJobChange(e);
             }}
             variant="filled"
+            // inputRef={titleRef}
             inputProps={{ style: { padding: 8 } }}
-            sx={{ width: "80vw" }}
+            sx={{ width: "25vw" }}
           />
-        </>
-      ))}
+        </div> */}
+        <table>
+          <tbody>
+            <tr>
+              <td className="w-[10vw] pt-5 flex items-center">
+                <WorkIcon className="mr-2" />
+                Job Title
+              </td>
+              <td>
+                <TextField
+                  id="title"
+                  placeholder="Job Title"
+                  // defaultValue={job.title}
+                  value={job.title}
+                  onChange={(e) => {
+                    handleJobChange(e);
+                  }}
+                  variant="filled"
+                  // inputRef={titleRef}
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  className="pt-2"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td className="w-[10vw] pt-5 flex items-center">
+                <BusinessIcon className="mr-2"></BusinessIcon>
+                Company
+              </td>
+              <td>
+                <TextField
+                  id="company"
+                  placeholder="Company"
+                  // defaultValue={job.company}
+                  value={job.company}
+                  onChange={(e) => {
+                    handleJobChange(e);
+                  }}
+                  variant="filled"
+                  // inputRef={companyRef}
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  className="pt-2"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td className="w-[10vw] pt-5 flex items-center">
+                <LocationOnIcon className="mr-2"></LocationOnIcon>
+                Location
+              </td>
+              <td>
+                <TextField
+                  id="location"
+                  placeholder="Location (e.g. Singapore)"
+                  // defaultValue={job.location}
+                  value={job.location}
+                  onChange={(e) => {
+                    handleJobChange(e);
+                  }}
+                  variant="filled"
+                  // inputRef={locationRef}
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  className="pt-2"
+                />
+              </td>
+            </tr>
+            <tr>
+              <td className="w-[10vw] pt-5 flex items-center">
+                <DescriptionIcon className="mr-2"></DescriptionIcon>
+                Job Description
+              </td>
+              <td>
+                <TextField
+                  id="jd_link"
+                  placeholder="Link to Job Description"
+                  // defaultValue={job.jd_link}
+                  value={job.jd_link}
+                  onChange={(e) => {
+                    handleJobChange(e);
+                  }}
+                  variant="filled"
+                  // inputRef={jdRef}
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  className="pt-2"
+                ></TextField>
+              </td>
+            </tr>
+            <tr>
+              <td className="w-[10vw] pt-5 flex items-center">
+                <ArrowDropDownCircleIcon className="mr-2" />
+                Status
+              </td>
+              <td>
+                <Autocomplete
+                  {...defaultProps}
+                  renderInput={(params: any) => (
+                    <TextField {...params} variant="standard" />
+                  )}
+                  id="latest_status"
+                  // defaultValue={job.latest_status}
+                  value={job.latest_status}
+                  className="pt-4 w-[25vw]"
+                  onChange={(
+                    e: React.SyntheticEvent<Element, Event>,
+                    value: any
+                  ) => {
+                    setJob((prevState: jobType) => {
+                      const newState = JSON.parse(JSON.stringify(prevState));
+                      newState.latest_status = value;
+                      if (value === "WISHLIST") {
+                        newState.application_date = "";
+                      }
+                      // console.log(newState);
+                      return newState;
+                    });
+                  }}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td className="w-[10vw] pt-5 flex items-center">
+                <EventNoteIcon className="mr-2" />
+                Apply Date
+              </td>
+              <td>
+                <TextField
+                  id="application_date"
+                  // defaultValue={job.application_date.split("T")[0]}
+                  value={job.application_date.split("T")[0]}
+                  onChange={(e) => {
+                    handleJobChange(e);
+                  }}
+                  placeholder="Apply date"
+                  variant="filled"
+                  inputProps={{ style: { padding: 8 } }}
+                  type="date"
+                  // inputRef={applyDateRef}
+                  sx={{ width: "25vw" }}
+                  className="pt-2"
+                ></TextField>
+              </td>
+            </tr>
+            <tr>
+              <td className="w-[10vw] pt-5 flex items-center">
+                <ContactMailIcon className="mr-2"></ContactMailIcon>Contact
+                Person
+              </td>
+              <td>
+                <TextField
+                  id="hr_email"
+                  // defaultValue={job.hr_email}
+                  value={job.hr_email}
+                  onChange={(e) => {
+                    handleJobChange(e);
+                  }}
+                  variant="filled"
+                  placeholder="HR email"
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  type="email"
+                  className="pt-2"
+                  // inputRef={hrEmailRef}
+                ></TextField>
+              </td>
+            </tr>
+            <tr>
+              <td className="w-[10vw] pt-5 flex items-center">
+                <NotesIcon className="mr-2" /> Job Notes
+              </td>
+              <td>
+                <TextField
+                  id="application_note"
+                  multiline
+                  rows={6}
+                  placeholder="More details about the job"
+                  // defaultValue={job.application_note}
+                  value={job.application_note}
+                  onChange={(e) => {
+                    handleJobChange(e);
+                  }}
+                  className="pt-2"
+                  variant="filled"
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "75vw" }}
+                  // inputRef={jobNoteRef}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <Divider className="m-10" />
+        <p className="text-2xl mt-8" style={{ fontWeight: "bold" }}>
+          Interviews
+        </p>
+        <Button
+          variant="contained"
+          onClick={addNewInterviewField}
+          className="my-5"
+        >
+          + Add New Interview
+        </Button>
+        {interviews.map((interview, idx) => (
+          <>
+            <table
+              key={idx}
+              style={{ textAlign: "center", width: "50%" }}
+              className="my-8 mx-24"
+            >
+              <thead>
+                <tr>
+                  <td style={{ fontWeight: "bold" }}>Type</td>
+                  <td style={{ fontWeight: "bold" }}>Date</td>
+                  <td style={{ fontWeight: "bold" }}>Interviewer Name</td>
+                  <td style={{ fontWeight: "bold" }}>Interviewer Email</td>
+                  <td style={{ fontWeight: "bold" }}>Interviewer Title</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <Autocomplete
+                      {...interviewDefaultProps}
+                      renderInput={(params: any) => (
+                        <TextField {...params} variant="standard" />
+                      )}
+                      id="type"
+                      // defaultValue={interview.type}
+                      value={interview.type}
+                      onChange={(
+                        e: React.SyntheticEvent<Element, Event>,
+                        value: any
+                      ) => {
+                        setInterviews((prevState: interviewType[]) => {
+                          const newState = JSON.parse(
+                            JSON.stringify(prevState)
+                          );
+                          newState[idx].type = value;
+                          console.log(newState);
+                          return newState;
+                        });
+                      }}
+                      sx={{ width: "13vw" }}
+                    />
+                  </td>
+                  <td>
+                    <TextField
+                      id="date"
+                      // defaultValue={interview.date.split("T")[0]}
+                      variant="filled"
+                      inputProps={{ style: { padding: 8 } }}
+                      type="date"
+                      sx={{ width: "13vw" }}
+                      value={interview.date}
+                      onChange={(e) => {
+                        handleChange(idx, e);
+                      }}
+                    ></TextField>
+                  </td>
+                  <td>
+                    <TextField
+                      id="interviewer_name"
+                      // defaultValue={interview.interviewer_name}
+                      variant="filled"
+                      inputProps={{ style: { padding: 8 } }}
+                      sx={{ width: "13vw" }}
+                      value={interview.interviewer_name}
+                      onChange={(e) => {
+                        handleChange(idx, e);
+                      }}
+                    ></TextField>
+                  </td>
+                  <td>
+                    <TextField
+                      id="interviewer_email"
+                      // defaultValue={interview.interviewer_email}
+                      variant="filled"
+                      inputProps={{ style: { padding: 8 } }}
+                      sx={{ width: "13vw" }}
+                      type="email"
+                      value={interview.interviewer_email}
+                      onChange={(e) => {
+                        handleChange(idx, e);
+                      }}
+                    ></TextField>
+                  </td>
+                  <td>
+                    <TextField
+                      id="interviewer_title"
+                      // defaultValue={interview.interviewer_title}
+                      variant="filled"
+                      inputProps={{ style: { padding: 8 } }}
+                      sx={{ width: "13vw" }}
+                      value={interview.interviewer_title}
+                      onChange={(e) => {
+                        handleChange(idx, e);
+                      }}
+                    ></TextField>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p style={{ fontWeight: "bold" }}>Interview notes</p>
+            <TextField
+              id="interview_note"
+              multiline
+              rows={4}
+              // defaultValue={interview.interview_note}
+              value={interview.interview_note}
+              onChange={(e) => {
+                handleChange(idx, e);
+              }}
+              variant="filled"
+              inputProps={{ style: { padding: 8 } }}
+              sx={{ width: "80vw" }}
+            />
+            <Divider className="m-10" />
+          </>
+        ))}
+      </div>
     </div>
   );
 };
