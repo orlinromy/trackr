@@ -20,7 +20,7 @@ function App() {
   );
 
   return (
-    <div className="App bg-[#F3F2F3]">
+    <div className="App">
       <header className="App-header">
         <AuthContext.Provider value={{ credentials, setCredentials }}>
           <Navbar />
