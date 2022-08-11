@@ -253,10 +253,10 @@ const HomeTable = () => {
   }
 
   function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-    if (b[orderBy] < a[orderBy]) {
+    if (b[orderBy] < a[orderBy] || a[orderBy] === null) {
       return -1;
     }
-    if (b[orderBy] > a[orderBy]) {
+    if (b[orderBy] > a[orderBy] || b[orderBy] === null) {
       return 1;
     }
     return 0;
