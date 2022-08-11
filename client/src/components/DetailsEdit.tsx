@@ -7,7 +7,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import Skeleton from "@mui/material/Skeleton";
-import { ConstructionOutlined } from "@mui/icons-material";
+import BusinessIcon from "@mui/icons-material/Business";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import DescriptionIcon from "@mui/icons-material/Description";
+import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
+import EventNoteIcon from "@mui/icons-material/EventNote";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import NotesIcon from "@mui/icons-material/Notes";
+import WorkIcon from "@mui/icons-material/Work";
 
 const DetailsEdit = () => {
   const navigate = useNavigate();
@@ -170,176 +177,218 @@ const DetailsEdit = () => {
   }, []);
 
   return (
-    <div>
-      <Button variant="contained" sx={{ width: "50px" }} onClick={handleSubmit}>
-        Save
-      </Button>
-      <Button
-        sx={{ width: "50px" }}
-        onClick={() => {
-          navigate(`/detail/${params.jobId}`);
-        }}
-      >
-        Cancel
-      </Button>
-
-      <h2>
-        {isLoading ? (
-          <Skeleton animation="wave" width="20%" />
-        ) : (
-          <TextField
-            id="filled-textarea"
-            placeholder="Placeholder"
-            defaultValue={job.title}
-            variant="filled"
-            inputRef={titleRef}
-            inputProps={{ style: { padding: 8 } }}
-            sx={{ width: "25vw" }}
-          />
-        )}
-      </h2>
-
-      <table>
-        <tr>
-          <td>Company</td>
-          <td>
-            {isLoading ? (
-              <Skeleton animation="wave" />
-            ) : (
-              <TextField
-                id="filled-textarea"
-                placeholder="Placeholder"
-                defaultValue={job.company}
-                variant="filled"
-                inputRef={companyRef}
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-              />
-            )}
-          </td>
-        </tr>
-        <tr>
-          <td>Location</td>
-          <td>
-            {isLoading ? (
-              <Skeleton animation="wave" />
-            ) : (
-              <TextField
-                id="filled-textarea"
-                placeholder="Placeholder"
-                defaultValue={job.location}
-                variant="filled"
-                inputRef={locationRef}
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-              />
-            )}
-          </td>
-        </tr>
-        <tr>
-          <td>Job Description</td>
-          <td>
-            {isLoading ? (
-              <Skeleton animation="wave" />
-            ) : (
-              <TextField
-                id="filled-textarea"
-                defaultValue={job.jd_link}
-                variant="filled"
-                inputRef={jdRef}
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-              ></TextField>
-            )}
-          </td>
-        </tr>
-        <tr>
-          <td>Status</td>
-          <td>
-            {isLoading ? (
-              <Skeleton animation="wave" />
-            ) : (
-              <Autocomplete
-                {...defaultProps}
-                renderInput={(params: any) => (
-                  <TextField {...params} variant="standard" />
-                )}
-                defaultValue={job.latest_status}
-                value={status || job.latest_status}
-                onChange={(object: any, value: any) => {
-                  setStatus(value);
-                }}
-              />
-            )}
-          </td>
-        </tr>
-        <tr>
-          <td>Apply Date</td>
-          <td>
-            {isLoading ? (
-              <Skeleton animation="wave" />
-            ) : (
-              <TextField
-                id="filled-textarea"
-                defaultValue={
-                  job.application_date &&
-                  new Date(
-                    new Date(job.application_date).getTime() -
-                      new Date(job.application_date).getTimezoneOffset() * 60000
-                  )
-                    .toISOString()
-                    .split("T")[0]
-                  // new Date(job.application_date).toLocaleDateString("en-SG", {
-                  //   timeZone: "Asia/Singapore",
-                  // })
-                }
-                variant="filled"
-                inputProps={{ style: { padding: 8 } }}
-                type="date"
-                inputRef={applyDateRef}
-                sx={{ width: "25vw" }}
-              ></TextField>
-            )}
-          </td>
-        </tr>
-        <tr>
-          <td>Contact Person</td>
-          <td>
-            {isLoading ? (
-              <Skeleton animation="wave" />
-            ) : (
-              <TextField
-                id="filled-textarea"
-                defaultValue={job.hr_email}
-                variant="filled"
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-                type="email"
-                inputRef={hrEmailRef}
-              ></TextField>
-            )}
-          </td>
-        </tr>
-        <tr>
-          <td>Job Note</td>
-          <td>
-            {isLoading ? (
-              <Skeleton animation="wave" />
-            ) : (
-              <TextField
-                id="filled-multiline-static"
-                multiline
-                rows={4}
-                defaultValue={job.application_note}
-                variant="filled"
-                inputProps={{ style: { padding: 8 } }}
-                sx={{ width: "25vw" }}
-                inputRef={jobNoteRef}
-              />
-            )}
-          </td>
-        </tr>
-      </table>
+    <div className="pl-36 mt-[20px] ">
+      <div className="mb-6">
+        <Button
+          variant="contained"
+          sx={{ width: "50px" }}
+          onClick={handleSubmit}
+        >
+          Save
+        </Button>
+        <Button
+          sx={{ width: "50px" }}
+          onClick={() => {
+            navigate(`/detail/${params.jobId}`);
+          }}
+          className="ml-4"
+        >
+          Cancel
+        </Button>
+      </div>
+      <div>
+        <table>
+          <tr>
+            <td className="w-[10vw] pt-5 flex items-center">
+              <WorkIcon className="mr-2" />
+              Job Title
+            </td>
+            <td>
+              {isLoading ? (
+                <Skeleton animation="wave" width="20%" />
+              ) : (
+                <TextField
+                  id="filled-textarea"
+                  placeholder="Job Title"
+                  defaultValue={job.title}
+                  variant="filled"
+                  inputRef={titleRef}
+                  inputProps={{ style: { padding: 8 } }}
+                  className="pt-2"
+                  sx={{ width: "25vw", height: "36px" }}
+                />
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="w-[10vw] pt-5 flex items-center">
+              <BusinessIcon className="mr-2"></BusinessIcon>
+              Company
+            </td>
+            <td>
+              {isLoading ? (
+                <Skeleton animation="wave" />
+              ) : (
+                <TextField
+                  id="filled-textarea"
+                  placeholder="Company"
+                  defaultValue={job.company}
+                  variant="filled"
+                  inputRef={companyRef}
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  className="pt-2"
+                />
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="w-[10vw] pt-5 flex items-center">
+              <LocationOnIcon className="mr-2"></LocationOnIcon>
+              Location
+            </td>
+            <td>
+              {isLoading ? (
+                <Skeleton animation="wave" />
+              ) : (
+                <TextField
+                  id="filled-textarea"
+                  placeholder="Placeholder"
+                  defaultValue={job.location}
+                  variant="filled"
+                  inputRef={locationRef}
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  className="pt-2"
+                />
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="w-[10vw] pt-5 flex items-center">
+              <DescriptionIcon className="mr-2"></DescriptionIcon>
+              Job Description
+            </td>
+            <td>
+              {isLoading ? (
+                <Skeleton animation="wave" />
+              ) : (
+                <TextField
+                  id="filled-textarea"
+                  defaultValue={job.jd_link}
+                  variant="filled"
+                  inputRef={jdRef}
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  className="pt-2"
+                ></TextField>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="w-[10vw] pt-5 flex items-center">
+              <ArrowDropDownCircleIcon className="mr-2" />
+              Status
+            </td>
+            <td>
+              {isLoading ? (
+                <Skeleton animation="wave" />
+              ) : (
+                <Autocomplete
+                  {...defaultProps}
+                  renderInput={(params: any) => (
+                    <TextField {...params} variant="standard" />
+                  )}
+                  sx={{ width: "25vw" }}
+                  className="pt-4"
+                  defaultValue={job.latest_status}
+                  value={status || job.latest_status}
+                  onChange={(object: any, value: any) => {
+                    setStatus(value);
+                  }}
+                />
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="w-[10vw] pt-5 flex items-center">
+              <EventNoteIcon className="mr-2" />
+              Apply Date
+            </td>
+            <td>
+              {isLoading ? (
+                <Skeleton animation="wave" />
+              ) : (
+                <TextField
+                  id="filled-textarea"
+                  className="pt-2"
+                  defaultValue={
+                    job.application_date &&
+                    new Date(
+                      new Date(job.application_date).getTime() -
+                        new Date(job.application_date).getTimezoneOffset() *
+                          60000
+                    )
+                      .toISOString()
+                      .split("T")[0]
+                    // new Date(job.application_date).toLocaleDateString("en-SG", {
+                    //   timeZone: "Asia/Singapore",
+                    // })
+                  }
+                  variant="filled"
+                  inputProps={{ style: { padding: 8 } }}
+                  type="date"
+                  inputRef={applyDateRef}
+                  sx={{ width: "25vw" }}
+                ></TextField>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="w-[10vw] pt-5 flex items-center">
+              <ContactMailIcon className="mr-2"></ContactMailIcon>Contact Person
+            </td>
+            <td>
+              {isLoading ? (
+                <Skeleton animation="wave" />
+              ) : (
+                <TextField
+                  id="filled-textarea"
+                  className="pt-2"
+                  defaultValue={job.hr_email}
+                  variant="filled"
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "25vw" }}
+                  type="email"
+                  inputRef={hrEmailRef}
+                ></TextField>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td className="w-[10vw] pt-5 flex items-center">
+              <NotesIcon className="mr-2" /> Job Notes
+            </td>
+            <td>
+              {isLoading ? (
+                <Skeleton animation="wave" />
+              ) : (
+                <TextField
+                  id="filled-multiline-static"
+                  className="pt-2"
+                  multiline
+                  rows={6}
+                  defaultValue={job.application_note}
+                  variant="filled"
+                  inputProps={{ style: { padding: 8 } }}
+                  sx={{ width: "75vw" }}
+                  inputRef={jobNoteRef}
+                />
+              )}
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
   );
 };

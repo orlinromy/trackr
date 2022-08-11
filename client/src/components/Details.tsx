@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { jobType, interviewType } from "../types/type";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 // import { useNavigate, useParams } from "react-router-dom";
 
 type detailsProps = {
@@ -24,14 +25,21 @@ const Details = (props: detailsProps) => {
 
   return (
     <div>
-      <Button onClick={handleBack}>
-        <ArrowBackIcon></ArrowBackIcon> Back to Dashboard
-      </Button>
-      <div className="job">
-        {props.isEdit ? <DetailsEdit /> : <DetailsView />}
-      </div>
-      <div className="interview">
-        <DetailsInterviewView />
+      <Navbar />
+      <div>
+        <Button
+          className="pl-5"
+          onClick={handleBack}
+          startIcon={<ArrowBackIcon />}
+        >
+          Back to Dashboard
+        </Button>
+        <div className="job">
+          {props.isEdit ? <DetailsEdit /> : <DetailsView />}
+        </div>
+        <div className="interview">
+          <DetailsInterviewView />
+        </div>
       </div>
     </div>
   );

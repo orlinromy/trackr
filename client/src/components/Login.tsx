@@ -101,6 +101,14 @@ const Login = () => {
           more days 😉
         </p>
         <img src={require("../assets/loginpage.jpg")} className="mx-auto"></img>
+        <p className="text-sm">
+          <a
+            href="https://www.freepik.com/vectors/looking-forward"
+            className="text-sky-600"
+          >
+            Looking forward vector created by pch.vector - www.freepik.com
+          </a>
+        </p>
       </div>
     </div>
   );

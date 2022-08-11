@@ -5,7 +5,6 @@ import { interviewType } from "../types/type";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { CircularProgress, Chip } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
@@ -397,290 +396,360 @@ const DetailsInterviewView = () => {
   return (
     <>
       <Divider className="m-10" />
-      <p className="text-2xl">Interviews</p>
-      <Button
-        onClick={() => {
-          setIsAddInterview(true);
-        }}
-      >
-        + Add Interview
-      </Button>
-      {!isLoading && interviews.length === 0 ? (
-        <p style={{ color: "lightgrey" }}>No interviews set</p>
-      ) : (
-        interviews.map((interview) => {
-          if (
-            !editInterview ||
-            interview.id !== (editInterview as interviewType).id
-          ) {
-            return (
-              <>
-                {isLoading ? (
-                  <h3>
-                    <Skeleton animation="wave" width="15%"></Skeleton>
-                  </h3>
-                ) : (
-                  <div className="flex justify-between">
-                    <p style={{ display: "inline" }}>
-                      Interview {"#" + interview.stage}
-                    </p>
-                    <ButtonGroup>
-                      <Button
-                        onClick={() => handleDeleteInterview(interview)}
-                        variant="outlined"
-                        startIcon={<DeleteIcon></DeleteIcon>}
-                      >
-                        Delete
-                      </Button>
-                      <Button
-                        onClick={() => handleEditInterview(interview)}
-                        variant="outlined"
-                        startIcon={<EditIcon fontSize="small" />}
-                      >
-                        Edit
-                      </Button>
-                    </ButtonGroup>
-                  </div>
-                )}
-                <table style={{ textAlign: "center", width: "50%" }}>
-                  <thead>
-                    <tr>
-                      <td>
-                        {isLoading ? (
-                          <Skeleton animation="wave"></Skeleton>
-                        ) : (
-                          "Type"
-                        )}
-                      </td>
-                      <td>
-                        {isLoading ? (
-                          <Skeleton animation="wave"></Skeleton>
-                        ) : (
-                          "Date"
-                        )}
-                      </td>
-                      <td>
-                        {isLoading ? (
-                          <Skeleton animation="wave"></Skeleton>
-                        ) : (
-                          "Interviewer"
-                        )}
-                      </td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <td>
-                      {isLoading ? (
-                        <Skeleton animation="wave"></Skeleton>
-                      ) : (
-                        interview.type
-                      )}
-                    </td>
-                    <td>
-                      {isLoading ? (
-                        <Skeleton animation="wave"></Skeleton>
-                      ) : (
-                        new Date(interview.date)
-                          .toLocaleDateString("en-GB", {
-                            weekday: "long",
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })
-                          .replace(/ /g, " ")
-                      )}
-                    </td>
-                    <td>
-                      {isLoading ? (
-                        <Skeleton animation="wave"></Skeleton>
-                      ) : (
-                        displayInterviewer(
-                          interview.interviewer_name,
-                          interview.interviewer_email,
-                          interview.interviewer_title
-                        )
-                      )}
-                    </td>
-                  </tbody>
-                </table>
-                <p style={{ fontWeight: "bold" }}>Interview Notes</p>
-                <div style={{ border: "solid grey 0.5px", width: "70%" }}>
-                  {interview.interview_note ? (
-                    <p>{interview.interview_note}</p>
+      <div className="pl-36 pr-48">
+        <p className="text-2xl" style={{ fontWeight: "bold" }}>
+          Interviews
+        </p>
+        <Button
+          onClick={() => {
+            setIsAddInterview(true);
+          }}
+          className="my-2"
+          variant="outlined"
+        >
+          + Add Interview
+        </Button>
+        {!isLoading && interviews.length === 0 ? (
+          <p style={{ color: "lightgrey" }}>No interviews set</p>
+        ) : (
+          interviews.map((interview) => {
+            if (
+              !editInterview ||
+              interview.id !== (editInterview as interviewType).id
+            ) {
+              return (
+                <>
+                  {isLoading ? (
+                    <h3>
+                      <Skeleton animation="wave" width="15%"></Skeleton>
+                    </h3>
                   ) : (
-                    <p style={{ color: "lightgrey" }}>No notes yet</p>
+                    <div className="flex justify-between">
+                      <p
+                        style={{ display: "inline", fontWeight: "bold" }}
+                        className="text-xl"
+                      >
+                        Interview {"#" + interview.stage}
+                      </p>
+                      <ButtonGroup>
+                        <Button
+                          onClick={() => handleDeleteInterview(interview)}
+                          variant="outlined"
+                          startIcon={<DeleteIcon></DeleteIcon>}
+                          color="error"
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          onClick={() => handleEditInterview(interview)}
+                          variant="outlined"
+                          startIcon={<EditIcon fontSize="small" />}
+                        >
+                          Edit
+                        </Button>
+                      </ButtonGroup>
+                    </div>
                   )}
-                </div>
-                <Divider className="m-10" />
-              </>
-            );
-          } else {
-            return (
-              <>
-                {isLoading ? (
-                  <h3>
-                    <Skeleton animation="wave" width="15%"></Skeleton>
-                  </h3>
-                ) : (
-                  <span>
-                    <h4 style={{ display: "inline" }}>
-                      Interview {"#" + interview.stage}
-                    </h4>
-                    <Button
-                      onClick={() => handleEdit()}
-                      startIcon={<TaskAltIcon fontSize="small" />}
-                    >
-                      Save
-                    </Button>
-                  </span>
-                )}
-                <table style={{ textAlign: "center", width: "50%" }}>
-                  <thead>
-                    <tr>
-                      <td>
-                        {isLoading ? (
-                          <Skeleton animation="wave"></Skeleton>
-                        ) : (
-                          "Type"
-                        )}
-                      </td>
-                      <td>
-                        {isLoading ? (
-                          <Skeleton animation="wave"></Skeleton>
-                        ) : (
-                          "Date"
-                        )}
-                      </td>
-                      <td>
-                        {isLoading ? (
-                          <Skeleton animation="wave"></Skeleton>
-                        ) : (
-                          "Interviewer Name"
-                        )}
-                      </td>
-                      <td>
-                        {isLoading ? (
-                          <Skeleton animation="wave"></Skeleton>
-                        ) : (
-                          "Interviewer Email"
-                        )}
-                      </td>
-                      <td>
-                        {isLoading ? (
-                          <Skeleton animation="wave"></Skeleton>
-                        ) : (
-                          "Interviewer Title"
-                        )}
-                      </td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <td>
-                      {isLoading ? (
-                        <Skeleton animation="wave"></Skeleton>
-                      ) : (
-                        <Autocomplete
-                          {...interviewDefaultProps}
-                          renderInput={(params: any) => (
-                            <TextField {...params} variant="standard" />
+                  <table
+                    style={{ textAlign: "center", width: "50vw" }}
+                    className="mx-auto my-8"
+                  >
+                    <thead>
+                      <tr>
+                        <td style={{ fontWeight: "bold" }}>
+                          {isLoading ? (
+                            <Skeleton animation="wave"></Skeleton>
+                          ) : (
+                            "Type"
                           )}
-                          defaultValue={interview.type}
-                          value={interviewType || interview.type}
-                          onChange={(object: any, value: any) => {
-                            setInterviewType(value);
-                          }}
-                        />
-                      )}
-                    </td>
-                    <td>
-                      {isLoading ? (
-                        <Skeleton animation="wave"></Skeleton>
-                      ) : (
-                        <TextField
-                          id="filled-textarea"
-                          defaultValue={
-                            interview.date &&
-                            new Date(
-                              new Date(interview.date).getTime() -
-                                new Date(interview.date).getTimezoneOffset() *
-                                  60000
-                            )
-                              .toISOString()
-                              .split("T")[0]
+                        </td>
+                        <td style={{ fontWeight: "bold" }}>
+                          {isLoading ? (
+                            <Skeleton animation="wave"></Skeleton>
+                          ) : (
+                            "Date"
+                          )}
+                        </td>
+                        <td style={{ fontWeight: "bold" }}>
+                          {isLoading ? (
+                            <Skeleton animation="wave"></Skeleton>
+                          ) : (
+                            "Interviewer"
+                          )}
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <td>
+                        {isLoading ? (
+                          <Skeleton animation="wave"></Skeleton>
+                        ) : (
+                          interview.type
+                        )}
+                      </td>
+                      <td>
+                        {isLoading ? (
+                          <Skeleton animation="wave"></Skeleton>
+                        ) : (
+                          new Date(interview.date)
+                            .toLocaleDateString("en-GB", {
+                              weekday: "long",
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })
+                            .replace(/ /g, " ")
+                        )}
+                      </td>
+                      <td>
+                        {isLoading ? (
+                          <Skeleton animation="wave"></Skeleton>
+                        ) : (
+                          displayInterviewer(
+                            interview.interviewer_name,
+                            interview.interviewer_email,
+                            interview.interviewer_title
+                          )
+                        )}
+                      </td>
+                    </tbody>
+                  </table>
+                  <p style={{ fontWeight: "bold", marginTop: "16px" }}>
+                    Interview Notes
+                  </p>
+                  <div
+                    style={{ border: "solid grey 0.5px" }}
+                    className="p-3 rounded-lg min-h-[100px]"
+                  >
+                    {interview.interview_note ? (
+                      <p>{interview.interview_note}</p>
+                    ) : (
+                      <p style={{ color: "lightgrey" }}>No notes yet</p>
+                    )}
+                  </div>
+                  <Divider className="m-10 w-[60vw]" />
+                </>
+              );
+            } else {
+              return (
+                <>
+                  {isLoading ? (
+                    <h3>
+                      <Skeleton animation="wave" width="15%"></Skeleton>
+                    </h3>
+                  ) : (
+                    <div className="flex justify-between">
+                      <h4
+                        style={{ display: "inline", fontWeight: "bold" }}
+                        className="text-xl"
+                      >
+                        Interview {"#" + interview.stage}
+                      </h4>
+                      <Button
+                        onClick={() => handleEdit()}
+                        startIcon={<TaskAltIcon fontSize="small" />}
+                        variant="outlined"
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  )}
+                  <table
+                    style={{ textAlign: "center", width: "50%" }}
+                    className="mx-auto"
+                  >
+                    <thead>
+                      <tr>
+                        <td style={{ fontWeight: "bold" }}>
+                          {isLoading ? (
+                            <Skeleton
+                              animation="wave"
+                              width="13vw"
+                              height={31}
+                            ></Skeleton>
+                          ) : (
+                            "Type"
+                          )}
+                        </td>
 
-                            // interview.date.split("T")[0]
-                          }
-                          variant="filled"
-                          inputProps={{ style: { padding: 8 } }}
-                          type="date"
-                          inputRef={dateRef}
-                          sx={{ width: "25vw" }}
-                        ></TextField>
-                      )}
-                    </td>
-                    <td>
-                      {isLoading ? (
-                        <Skeleton animation="wave"></Skeleton>
-                      ) : (
-                        <TextField
-                          id="filled-textarea"
-                          defaultValue={interview.interviewer_name}
-                          variant="filled"
-                          inputProps={{ style: { padding: 8 } }}
-                          sx={{ width: "25vw" }}
-                          type="email"
-                          inputRef={nameRef}
-                        ></TextField>
-                      )}
-                    </td>
-                    <td>
-                      {isLoading ? (
-                        <Skeleton animation="wave"></Skeleton>
-                      ) : (
-                        <TextField
-                          id="filled-textarea"
-                          defaultValue={interview.interviewer_email}
-                          variant="filled"
-                          inputProps={{ style: { padding: 8 } }}
-                          sx={{ width: "25vw" }}
-                          type="email"
-                          inputRef={emailRef}
-                        ></TextField>
-                      )}
-                    </td>
-                    <td>
-                      {isLoading ? (
-                        <Skeleton animation="wave"></Skeleton>
-                      ) : (
-                        <TextField
-                          id="filled-textarea"
-                          defaultValue={interview.interviewer_title}
-                          variant="filled"
-                          inputProps={{ style: { padding: 8 } }}
-                          sx={{ width: "25vw" }}
-                          type="email"
-                          inputRef={titleRef}
-                        ></TextField>
-                      )}
-                    </td>
-                  </tbody>
-                </table>
-                <p style={{ fontWeight: "bold" }}>Interview Notes</p>
-                <TextField
-                  id="filled-multiline-static"
-                  multiline
-                  rows={4}
-                  defaultValue={interview.interview_note}
-                  variant="filled"
-                  inputProps={{ style: { padding: 8 } }}
-                  sx={{ width: "80vw" }}
-                  inputRef={noteRef}
-                />
-              </>
-            );
-          }
-        })
-      )}
+                        <td style={{ fontWeight: "bold" }}>
+                          {isLoading ? (
+                            <Skeleton
+                              animation="wave"
+                              width="10vw"
+                              height={31}
+                            ></Skeleton>
+                          ) : (
+                            "Date"
+                          )}
+                        </td>
+                        <td style={{ fontWeight: "bold" }}>
+                          {isLoading ? (
+                            <Skeleton
+                              animation="wave"
+                              width="13vw"
+                              height={31}
+                            ></Skeleton>
+                          ) : (
+                            "Interviewer Name"
+                          )}
+                        </td>
+                        <td style={{ fontWeight: "bold" }}>
+                          {isLoading ? (
+                            <Skeleton
+                              animation="wave"
+                              width="10vw"
+                              height={31}
+                            ></Skeleton>
+                          ) : (
+                            "Interviewer Email"
+                          )}
+                        </td>
+                        <td style={{ fontWeight: "bold" }}>
+                          {isLoading ? (
+                            <Skeleton
+                              animation="wave"
+                              width="10vw"
+                              height={31}
+                            ></Skeleton>
+                          ) : (
+                            "Interviewer Title"
+                          )}
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <td>
+                        {isLoading ? (
+                          <Skeleton
+                            animation="wave"
+                            width="13vw"
+                            height={31}
+                          ></Skeleton>
+                        ) : (
+                          <Autocomplete
+                            {...interviewDefaultProps}
+                            renderInput={(params: any) => (
+                              <TextField {...params} variant="standard" />
+                            )}
+                            defaultValue={interview.type}
+                            value={interviewType || interview.type}
+                            onChange={(object: any, value: any) => {
+                              setInterviewType(value);
+                            }}
+                            className="w-[13vw]"
+                          />
+                        )}
+                      </td>
+                      <td>
+                        {isLoading ? (
+                          <Skeleton
+                            animation="wave"
+                            width="10vw"
+                            height={31}
+                          ></Skeleton>
+                        ) : (
+                          <TextField
+                            id="filled-textarea"
+                            defaultValue={
+                              interview.date &&
+                              new Date(
+                                new Date(interview.date).getTime() -
+                                  new Date(interview.date).getTimezoneOffset() *
+                                    60000
+                              )
+                                .toISOString()
+                                .split("T")[0]
+
+                              // interview.date.split("T")[0]
+                            }
+                            variant="filled"
+                            inputProps={{ style: { padding: 8 } }}
+                            type="date"
+                            inputRef={dateRef}
+                            sx={{ width: "10vw", marginLeft: "10px" }}
+                          ></TextField>
+                        )}
+                      </td>
+                      <td>
+                        {isLoading ? (
+                          <Skeleton
+                            animation="wave"
+                            width="10vw"
+                            height={31}
+                          ></Skeleton>
+                        ) : (
+                          <TextField
+                            id="filled-textarea"
+                            defaultValue={interview.interviewer_name}
+                            variant="filled"
+                            inputProps={{ style: { padding: 8 } }}
+                            sx={{ width: "10vw", marginLeft: "10px" }}
+                            type="email"
+                            inputRef={nameRef}
+                          ></TextField>
+                        )}
+                      </td>
+                      <td>
+                        {isLoading ? (
+                          <Skeleton
+                            animation="wave"
+                            width="10vw"
+                            height={31}
+                          ></Skeleton>
+                        ) : (
+                          <TextField
+                            id="filled-textarea"
+                            defaultValue={interview.interviewer_email}
+                            variant="filled"
+                            inputProps={{ style: { padding: 8 } }}
+                            sx={{ width: "10vw", marginLeft: "10px" }}
+                            type="email"
+                            inputRef={emailRef}
+                          ></TextField>
+                        )}
+                      </td>
+                      <td>
+                        {isLoading ? (
+                          <Skeleton
+                            animation="wave"
+                            width="10vw"
+                            height={31}
+                          ></Skeleton>
+                        ) : (
+                          <TextField
+                            id="filled-textarea"
+                            defaultValue={interview.interviewer_title}
+                            variant="filled"
+                            inputProps={{ style: { padding: 8 } }}
+                            sx={{ width: "10vw", marginLeft: "10px" }}
+                            type="email"
+                            inputRef={titleRef}
+                          ></TextField>
+                        )}
+                      </td>
+                    </tbody>
+                  </table>
+                  <p style={{ fontWeight: "bold", marginTop: "16px" }}>
+                    Interview Notes
+                  </p>
+                  <TextField
+                    id="filled-multiline-static"
+                    multiline
+                    rows={4}
+                    defaultValue={interview.interview_note}
+                    variant="filled"
+                    inputProps={{ style: { padding: 8 } }}
+                    sx={{ width: "75vw" }}
+                    inputRef={noteRef}
+                  />
+                  <Divider className="m-10" />
+                </>
+              );
+            }
+          })
+        )}
+      </div>
       <Snackbar
         open={isSnackBarOpen}
         autoHideDuration={6000}
@@ -694,7 +763,7 @@ const DetailsInterviewView = () => {
         keepMounted
         onClose={handleAddInterviewClose}
         aria-describedby="alert-dialog-slide-description"
-        maxWidth="xl"
+        maxWidth="md"
       >
         <DialogTitle>Add New Interview</DialogTitle>
         <DialogContent>
@@ -702,7 +771,7 @@ const DetailsInterviewView = () => {
             <div style={{ display: "flex" }}>
               <InputLabel
                 htmlFor="type"
-                sx={{ width: "30%", marginRight: "20px" }}
+                sx={{ width: "20%", marginRight: "20px", marginTop: "3px" }}
               >
                 Interview Type
               </InputLabel>
@@ -731,9 +800,9 @@ const DetailsInterviewView = () => {
             <div style={{ display: "flex" }}>
               <InputLabel
                 htmlFor="date"
-                sx={{ width: "30%", marginRight: "20px" }}
+                sx={{ width: "20%", marginRight: "20px", marginTop: "7px" }}
               >
-                Date
+                Interview Date
               </InputLabel>
               <TextField
                 id="date"
@@ -751,7 +820,7 @@ const DetailsInterviewView = () => {
             <div style={{ display: "flex" }}>
               <InputLabel
                 htmlFor="interviewer_name"
-                sx={{ width: "30%", marginRight: "20px" }}
+                sx={{ width: "20%", marginRight: "20px", marginTop: "6px" }}
               >
                 Interviewer Name
               </InputLabel>
@@ -770,7 +839,7 @@ const DetailsInterviewView = () => {
             <div style={{ display: "flex" }}>
               <InputLabel
                 htmlFor="interviewer_email"
-                sx={{ width: "30%", marginRight: "20px" }}
+                sx={{ width: "20%", marginRight: "20px", marginTop: "6px" }}
               >
                 Interviewer Email
               </InputLabel>
@@ -790,7 +859,7 @@ const DetailsInterviewView = () => {
             <div style={{ display: "flex" }}>
               <InputLabel
                 htmlFor="interviewer_title"
-                sx={{ width: "30%", marginRight: "20px" }}
+                sx={{ width: "20%", marginRight: "20px", marginTop: "6px" }}
               >
                 Interviewer Title
               </InputLabel>
@@ -807,7 +876,9 @@ const DetailsInterviewView = () => {
               ></TextField>
             </div>
 
-            <p style={{ fontWeight: "bold" }}>Interview Notes</p>
+            <p style={{ fontWeight: "bold", marginTop: "16px" }}>
+              Interview Notes
+            </p>
             <TextField
               id="interview_note"
               multiline
@@ -819,7 +890,7 @@ const DetailsInterviewView = () => {
               }}
               variant="filled"
               inputProps={{ style: { padding: 8 } }}
-              sx={{ width: "80vw" }}
+              sx={{ width: "50vw" }}
             />
             <DialogActions>
               <Button

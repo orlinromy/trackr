@@ -112,7 +112,7 @@ const Register = () => {
             </button>
             <p className="mt-6">
               Already have an account?{" "}
-              <a href="/login" className="text-sky-500 ">
+              <a href="/login" className="text-sky-500">
                 Login here
               </a>
             </p>
@@ -129,6 +129,14 @@ const Register = () => {
           src={require("../assets/registrationpage.jpg")}
           className="mx-auto"
         ></img>
+        <p className="text-sm">
+          <a
+            href="https://www.freepik.com/vectors/teamwork-illustration"
+            className="text-sky-600"
+          >
+            Teamwork illustration vector created by pch.vector - www.freepik.com
+          </a>
+        </p>
       </div>
     </div>
   );
