@@ -6,6 +6,7 @@ import TocIcon from "@mui/icons-material/Toc";
 import ViewKanbanIcon from "@mui/icons-material/ViewKanban";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -24,40 +25,43 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <>
+      <Navbar />
       <div>
-        <div className="flex justify-between w-[90%] mx-auto">
-          <Button
-            variant="contained"
-            onClick={navigateNew}
-            className="bg-sky-600 hover:bg-sky-500"
-          >
-            {" "}
-            + Add New Application
-          </Button>
-          <ButtonGroup
-            variant="outlined"
-            aria-label="outlined primary button group"
-          >
+        <div>
+          <div className="flex justify-between w-[90%] mx-auto">
             <Button
-              onClick={setMode}
-              id="table"
-              disabled={viewMode === "table"}
+              variant="contained"
+              onClick={navigateNew}
+              className="bg-sky-600 hover:bg-sky-500"
             >
-              <TocIcon />
+              {" "}
+              + Add New Application
             </Button>
-            <Button
-              onClick={setMode}
-              id="kanban"
-              disabled={viewMode === "kanban"}
+            <ButtonGroup
+              variant="outlined"
+              aria-label="outlined primary button group"
             >
-              <ViewKanbanIcon />
-            </Button>
-          </ButtonGroup>
+              <Button
+                onClick={setMode}
+                id="table"
+                disabled={viewMode === "table"}
+              >
+                <TocIcon />
+              </Button>
+              <Button
+                onClick={setMode}
+                id="kanban"
+                disabled={viewMode === "kanban"}
+              >
+                <ViewKanbanIcon />
+              </Button>
+            </ButtonGroup>
+          </div>
+          {viewMode === "table" ? <HomeTable /> : <HomeKanban />}
         </div>
-        {viewMode === "table" ? <HomeTable /> : <HomeKanban />}
       </div>
-    </div>
+    </>
   );
 };
 

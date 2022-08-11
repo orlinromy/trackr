@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import Button from "@mui/material/Button";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import { interviewType } from "../types/type";
 import axios from "axios";
 import AuthContext from "../context/AuthContext";
@@ -15,6 +16,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import InputLabel from "@mui/material/InputLabel";
+import Divider from "@mui/material/Divider";
 import Slide, { SlideProps } from "@mui/material/Slide";
 import {
   Dialog,
@@ -43,6 +45,7 @@ const DetailsInterviewView = () => {
   const titleRef = useRef();
   const noteRef = useRef();
   const authCtx = useContext(AuthContext);
+  const [isUndoClicked, setIsUndoClicked] = useState<boolean>(false);
   const [interviews, setInterviews] = useState<interviewType[]>([
     {
       id: "",
@@ -184,6 +187,7 @@ const DetailsInterviewView = () => {
   }
 
   function handleUndo() {
+    setIsUndoClicked(true);
     setInterviews((prevState) =>
       [...prevState, deletedInterview as interviewType].sort(
         (a, b) => (a.stage as number) - (b.stage as number)
@@ -231,7 +235,8 @@ const DetailsInterviewView = () => {
 
   function handleSnackBarClose() {
     setIsSnackBarOpen(false);
-    deleteInterview();
+    !isUndoClicked && deleteInterview();
+    setIsUndoClicked(false);
   }
 
   const action = (
@@ -391,7 +396,8 @@ const DetailsInterviewView = () => {
 
   return (
     <>
-      <h3>Interviews</h3>
+      <Divider className="m-10" />
+      <p className="text-2xl">Interviews</p>
       <Button
         onClick={() => {
           setIsAddInterview(true);
@@ -414,22 +420,26 @@ const DetailsInterviewView = () => {
                     <Skeleton animation="wave" width="15%"></Skeleton>
                   </h3>
                 ) : (
-                  <div>
-                    <span>
-                      <h4 style={{ display: "inline" }}>
-                        Interview {"#" + interview.stage}
-                      </h4>
-                      <IconButton
+                  <div className="flex justify-between">
+                    <p style={{ display: "inline" }}>
+                      Interview {"#" + interview.stage}
+                    </p>
+                    <ButtonGroup>
+                      <Button
                         onClick={() => handleDeleteInterview(interview)}
+                        variant="outlined"
+                        startIcon={<DeleteIcon></DeleteIcon>}
                       >
-                        <DeleteIcon></DeleteIcon>
-                      </IconButton>
-                      <IconButton
+                        Delete
+                      </Button>
+                      <Button
                         onClick={() => handleEditInterview(interview)}
+                        variant="outlined"
+                        startIcon={<EditIcon fontSize="small" />}
                       >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </span>
+                        Edit
+                      </Button>
+                    </ButtonGroup>
                   </div>
                 )}
                 <table style={{ textAlign: "center", width: "50%" }}>
@@ -493,7 +503,7 @@ const DetailsInterviewView = () => {
                     </td>
                   </tbody>
                 </table>
-                <p style={{ fontWeight: "bold" }}>Interview notes</p>
+                <p style={{ fontWeight: "bold" }}>Interview Notes</p>
                 <div style={{ border: "solid grey 0.5px", width: "70%" }}>
                   {interview.interview_note ? (
                     <p>{interview.interview_note}</p>
@@ -501,6 +511,7 @@ const DetailsInterviewView = () => {
                     <p style={{ color: "lightgrey" }}>No notes yet</p>
                   )}
                 </div>
+                <Divider className="m-10" />
               </>
             );
           } else {
@@ -515,9 +526,12 @@ const DetailsInterviewView = () => {
                     <h4 style={{ display: "inline" }}>
                       Interview {"#" + interview.stage}
                     </h4>
-                    <IconButton onClick={() => handleEdit()}>
-                      <TaskAltIcon fontSize="small" />
-                    </IconButton>
+                    <Button
+                      onClick={() => handleEdit()}
+                      startIcon={<TaskAltIcon fontSize="small" />}
+                    >
+                      Save
+                    </Button>
                   </span>
                 )}
                 <table style={{ textAlign: "center", width: "50%" }}>
@@ -651,7 +665,7 @@ const DetailsInterviewView = () => {
                     </td>
                   </tbody>
                 </table>
-                <p style={{ fontWeight: "bold" }}>Interview notes</p>
+                <p style={{ fontWeight: "bold" }}>Interview Notes</p>
                 <TextField
                   id="filled-multiline-static"
                   multiline
@@ -793,7 +807,7 @@ const DetailsInterviewView = () => {
               ></TextField>
             </div>
 
-            <p style={{ fontWeight: "bold" }}>Interview notes</p>
+            <p style={{ fontWeight: "bold" }}>Interview Notes</p>
             <TextField
               id="interview_note"
               multiline

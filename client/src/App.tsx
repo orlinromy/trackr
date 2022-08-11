@@ -23,7 +23,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <AuthContext.Provider value={{ credentials, setCredentials }}>
-          <Navbar />
+          {/* <Navbar /> */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

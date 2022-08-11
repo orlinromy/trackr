@@ -155,7 +155,7 @@ const DetailsView = () => {
           </td>
         </tr>
         <tr>
-          <td>Job Note</td>
+          <td>Job Notes</td>
           <td>
             {isLoading ? (
               <Skeleton animation="wave" />

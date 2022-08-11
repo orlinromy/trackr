@@ -43,37 +43,87 @@ const Register = () => {
   }
 
   return (
-    <div>
-      <form onSubmit={handleRegister}>
-        <label htmlFor="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          onChange={handleChange}
-          value={data.email}
-        ></input>
-        {error && <p style={{ color: "red" }}>{error.message[2]}</p>}
-        <br />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          onChange={handleChange}
-          value={data.password}
-        ></input>
-        {error && <p style={{ color: "red" }}>{error.message[1]}</p>}
-        <br />
-        <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          type="text"
-          onChange={handleChange}
-          value={data.name}
-        ></input>
-        {error && <p style={{ color: "red" }}>{error.message[0]}</p>}
-        <br />
-        <button type="submit">Register</button>
-      </form>
+    <div className="flex border rounded-xl shadow-xl justify-center items-center mt-[20vh] ml-[15vw] py-20 w-[70vw]">
+      <div className="flex">
+        <div className="w-[30vw]">
+          <form onSubmit={handleRegister}>
+            <label htmlFor="email">Email</label>
+            <br />
+            <input
+              id="email"
+              type="email"
+              onChange={handleChange}
+              value={data.email}
+              className="w-[80%] py-1 px-1 bg-stone-100 border border-stone-200"
+            ></input>
+            {error ? (
+              <p className="mb-3" style={{ color: "red" }}>
+                {error.message[2]}
+              </p>
+            ) : (
+              <p className="mb-3"></p>
+            )}
+            <br />
+            <label htmlFor="password">Password</label>
+            <br />
+            <input
+              id="password"
+              type="password"
+              onChange={handleChange}
+              value={data.password}
+              className="w-[80%] py-1 px-1 bg-stone-100 border border-stone-200"
+            ></input>
+            {error ? (
+              <p className="mb-3" style={{ color: "red" }}>
+                {error.message[1]}
+              </p>
+            ) : (
+              <p className="mb-3"></p>
+            )}
+            <br />
+            <label htmlFor="name">Name</label>
+            <br />
+            <input
+              id="name"
+              type="text"
+              onChange={handleChange}
+              value={data.name}
+              className="w-[80%] py-1 px-1 bg-stone-100 border border-stone-200"
+            ></input>
+            {error ? (
+              <p className="mb-3" style={{ color: "red" }}>
+                {error.message[0]}
+              </p>
+            ) : (
+              <p className="mb-3"></p>
+            )}
+            <br />
+            <button
+              type="submit"
+              className="bg-sky-200 px-6 py-1 mt-1 border rounded border-sky-300"
+            >
+              Register
+            </button>
+            <p className="mt-6">
+              Already have an account?{" "}
+              <a href="/login" className="text-sky-500 ">
+                Login here
+              </a>
+            </p>
+          </form>
+        </div>
+      </div>
+      <div className="w-[30vw] text-center ">
+        <p className="text-2xl mb-6">Welcome to Trackr!</p>
+        <p>
+          Trackr is a simple app that helps you track your job application.
+          Create an account to start using!
+        </p>
+        <img
+          src={require("../assets/registrationpage.jpg")}
+          className="mx-auto"
+        ></img>
+      </div>
     </div>
   );
 };

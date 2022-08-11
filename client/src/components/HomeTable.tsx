@@ -252,10 +252,6 @@ const HomeTable = () => {
     return `stage: ${upcomingInterview.stage}\ntype: ${upcomingInterview.type}\n${interviewer}`;
   }
 
-  // function navigateNew() {
-  //   navigate("/new");
-  // }
-
   function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -279,11 +275,6 @@ const HomeTable = () => {
   }
 
   return (
-    // // <div >
-    //   /* <Button variant="contained" onClick={navigateNew}>
-    //     {" "}
-    //     + Add New Application
-    //   </Button> */
     <div>
       <div className="w-[95%] min-h-[90vh] border rounded-xl shadow-2xl mx-auto my-10">
         <div className="w-[95%] mx-auto py-10">

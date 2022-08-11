@@ -25,7 +25,7 @@ const Details = (props: detailsProps) => {
   return (
     <div>
       <Button onClick={handleBack}>
-        <ArrowBackIcon></ArrowBackIcon>
+        <ArrowBackIcon></ArrowBackIcon> Back to Dashboard
       </Button>
       <div className="job">
         {props.isEdit ? <DetailsEdit /> : <DetailsView />}
