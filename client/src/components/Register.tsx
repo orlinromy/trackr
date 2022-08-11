@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
 import * as customType from "../types/type";
 import AuthContext from "../context/AuthContext";
@@ -41,6 +41,12 @@ const Register = () => {
       });
     }
   }
+
+  useEffect(() => {
+    if (authCtx.credentials.access !== "" || localStorage.getItem("access")) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="flex border rounded-xl shadow-xl justify-center items-center mt-[20vh] ml-[15vw] py-20 w-[70vw]">

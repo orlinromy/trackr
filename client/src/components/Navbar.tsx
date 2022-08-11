@@ -33,7 +33,10 @@ const Navbar = () => {
   }
 
   return (
-    <div>
+    <div className="bg-stone-50 h-[7vh] border border-stone-200 mb-8 flex justify-between items-center p-6">
+      <a className="block w-[5vh] " href="/">
+        <img src={require("../assets/job.png")}></img>
+      </a>
       <Button onClick={logout}>Logout</Button>
     </div>
   );

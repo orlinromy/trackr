@@ -276,9 +276,9 @@ const HomeTable = () => {
 
   return (
     <div>
-      <div className="w-[95%] min-h-[90vh] border rounded-xl shadow-2xl mx-auto my-10">
-        <div className="w-[95%] mx-auto py-10">
-          <Table>
+      <div className="w-[95%] h-[80vh] overflow-scroll border rounded-xl shadow-2xl mx-auto my-10">
+        <div className="w-[95%] mx-auto py-2">
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell className="text-lg">Job Title</TableCell>
@@ -420,7 +420,7 @@ const HomeTable = () => {
                     ) : null}{" "}
                   </TableSortLabel>
                 </TableCell>
-                <TableCell className="text-lg">Actions</TableCell>
+                <TableCell className="text-lg"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

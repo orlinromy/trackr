@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { AutoMode } from "@mui/icons-material";
 
 const Transition = React.forwardRef(function Transition(
   props: SlideProps,
@@ -395,7 +396,16 @@ const HomeKanban = () => {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "start", height: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "start",
+          margin: "10px auto",
+          height: "100%",
+          width: "99vw",
+          overflow: "scroll",
+        }}
+      >
         <DragDropContext
           onDragEnd={(result: DropResult) =>
             onDragEnd(result, columns, setColumns)
@@ -408,8 +418,9 @@ const HomeKanban = () => {
                 flexDirection: "column",
                 alignItems: "center",
               }}
+              className="border border-stone-300 mx-2 bg-stone-200"
             >
-              <h2>{id}</h2>
+              <p className="text-lg my-4 tracking-wide font-bold">{id}</p>
               <div style={{ margin: 8 }}>
                 <Droppable droppableId={id} key={id}>
                   {(provided, snapshot) => (
@@ -419,11 +430,14 @@ const HomeKanban = () => {
                       style={{
                         background: snapshot.isDraggingOver
                           ? "lightblue"
-                          : "lightgrey",
+                          : "#fafaf9",
                         padding: 4,
                         width: 250,
-                        minHeight: 500,
+                        // minHeight: 500,
+                        height: "80vh",
+                        overflow: "scroll",
                       }}
+                      className="border border-stone-200"
                     >
                       {/* @ts-ignore */}
                       {column.items.map((item, index) => {
@@ -445,8 +459,8 @@ const HomeKanban = () => {
                                     margin: "0 0 8px 0",
                                     minHeight: "50px",
                                     backgroundColor: snapshot.isDragging
-                                      ? "#263b4a"
-                                      : "#456C86",
+                                      ? "#0369a1"
+                                      : "#0d9488",
                                     color: "white",
                                     ...provided.draggableProps.style,
                                   }}

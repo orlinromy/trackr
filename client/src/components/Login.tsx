@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
 import * as customType from "../types/type";
 import AuthContext from "../context/AuthContext";
@@ -37,6 +37,12 @@ const Login = () => {
       setError({ message: Array.from(new Set(error.response.data.message)) });
     }
   }
+
+  useEffect(() => {
+    if (authCtx.credentials.access !== "" || localStorage.getItem("access")) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="flex border rounded-xl shadow-xl justify-center items-center mt-[20vh] ml-[15vw] py-20 w-[70vw]">
@@ -92,7 +98,7 @@ const Login = () => {
             (new Date(2023, 2, 12).getTime() - new Date(Date.now()).getTime()) /
               86400000
           ).toString()}{" "}
-          more days!
+          more days 😉
         </p>
         <img src={require("../assets/loginpage.jpg")} className="mx-auto"></img>
       </div>

@@ -4,6 +4,14 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
 
+html {
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
 body {
   margin: 0;
   /* font-family: "Quicksand", sans-serif; */
@@ -13,6 +21,7 @@ body {
     "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: none;
 }
 
 code {
