@@ -214,16 +214,16 @@ const HomeTable = () => {
     return `stage: ${upcomingInterview.stage}\ntype: ${upcomingInterview.type}\n${interviewer}`;
   }
 
-  function navigateNew() {
-    navigate("/new");
-  }
+  // function navigateNew() {
+  //   navigate("/new");
+  // }
 
   return (
     <div>
-      <Button variant="contained" onClick={navigateNew}>
+      {/* <Button variant="contained" onClick={navigateNew}>
         {" "}
         + Add New Application
-      </Button>
+      </Button> */}
       <Table>
         <TableHead>
           <TableRow>

@@ -174,6 +174,14 @@ const DetailsEdit = () => {
       <Button variant="contained" sx={{ width: "50px" }} onClick={handleSubmit}>
         Save
       </Button>
+      <Button
+        sx={{ width: "50px" }}
+        onClick={() => {
+          navigate(`/detail/${params.jobId}`);
+        }}
+      >
+        Cancel
+      </Button>
 
       <h2>
         {isLoading ? (
@@ -273,7 +281,18 @@ const DetailsEdit = () => {
             ) : (
               <TextField
                 id="filled-textarea"
-                defaultValue={job.application_date.split("T")[0]}
+                defaultValue={
+                  job.application_date &&
+                  new Date(
+                    new Date(job.application_date).getTime() -
+                      new Date(job.application_date).getTimezoneOffset() * 60000
+                  )
+                    .toISOString()
+                    .split("T")[0]
+                  // new Date(job.application_date).toLocaleDateString("en-SG", {
+                  //   timeZone: "Asia/Singapore",
+                  // })
+                }
                 variant="filled"
                 inputProps={{ style: { padding: 8 } }}
                 type="date"

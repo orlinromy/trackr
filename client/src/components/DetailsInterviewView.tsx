@@ -14,9 +14,29 @@ import EditIcon from "@mui/icons-material/Edit";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import InputLabel from "@mui/material/InputLabel";
+import Slide, { SlideProps } from "@mui/material/Slide";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+
+const Transition = React.forwardRef(function Transition(
+  props: SlideProps,
+  ref
+) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const DetailsInterviewView = () => {
   const navigate = useNavigate();
+
+  type RouteParams = {
+    jobId: string;
+  };
+  const params = useParams<RouteParams>();
   const dateRef = useRef();
   const nameRef = useRef();
   const emailRef = useRef();
@@ -42,7 +62,7 @@ const DetailsInterviewView = () => {
   const [isSnackBarOpen, setIsSnackBarOpen] = useState<boolean>(false);
   const [deletedInterview, setDeletedInterview] =
     useState<interviewType | null>(null);
-  const params = useParams();
+
   const [editInterview, setEditInterview] = useState<interviewType | null>(
     null
   );
@@ -55,8 +75,24 @@ const DetailsInterviewView = () => {
     "CEO_INTERVIEW",
     "CROSS_TEAM",
   ];
+  const [isAddInterview, setIsAddInterview] = useState<boolean>(false);
+  const [newInterview, setNewInterview] = useState<interviewType[]>([
+    {
+      id: "",
+      stage: 0,
+      type: "PHONE",
+      date: new Date(Date.now()).toISOString().split("T")[0],
+      has_assignment: false,
+      assignment_details: null,
+      interview_note: "",
+      job_id: params.jobId as string,
+      interviewer_name: "",
+      interviewer_email: "",
+      interviewer_title: "",
+    },
+  ]);
 
-  const defaultProps = {
+  const interviewDefaultProps = {
     options: interviewTypes,
     getOptionLabel: (type: string) => type,
   };
@@ -214,14 +250,14 @@ const DetailsInterviewView = () => {
     </React.Fragment>
   );
 
-  type editInterviewInputType = {
+  interface editInterviewInputType {
     type: string;
     date: string;
     interviewer_name: string | null;
     interviewer_email: string | null;
     interviewer_title: string | null;
     interview_note: string | null;
-  };
+  }
   async function updateInterview(inputData: editInterviewInputType) {
     try {
       const data = await axios.patch(
@@ -290,6 +326,65 @@ const DetailsInterviewView = () => {
     });
   }
 
+  function handleAddInterviewClose() {
+    setIsAddInterview(false);
+  }
+
+  function handleAddInterviewChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const newState = JSON.parse(JSON.stringify(newInterview));
+    if (e.currentTarget.id === "date") {
+      newState[0][e.currentTarget.id] = new Date(e.currentTarget.value)
+        .toISOString()
+        .split("T")[0];
+    } else {
+      newState[0][e.currentTarget.id] = e.currentTarget.value;
+    }
+
+    setNewInterview(newState);
+  }
+
+  async function addNewInterviews(jobId: string) {
+    try {
+      console.log("adding new interviews");
+
+      const data = await axios.put(
+        "http://localhost:5001/interviews/interview",
+        {
+          refreshToken:
+            authCtx.credentials.refresh || localStorage.getItem("refresh"),
+          interviews: JSON.parse(JSON.stringify(newInterview)),
+          job_id: params.jobId as string,
+        },
+        {
+          headers: {
+            //@ts-ignore
+            Authorization:
+              authCtx.credentials.access || localStorage.getItem("access"),
+          },
+        }
+      );
+      console.log(data.data);
+
+      if (data.data.access) {
+        authCtx.setCredentials({
+          ...authCtx.credentials,
+          access: data.data.access,
+        });
+        localStorage.setItem("access", data.data.access);
+      }
+
+      getOneJobInterviews();
+      setIsAddInterview(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function submitNewInterview() {
+    addNewInterviews(params.jobId as string);
+  }
   useEffect(() => {
     getOneJobInterviews();
   }, []);
@@ -297,7 +392,13 @@ const DetailsInterviewView = () => {
   return (
     <>
       <h3>Interviews</h3>
-
+      <Button
+        onClick={() => {
+          setIsAddInterview(true);
+        }}
+      >
+        + Add Interview
+      </Button>
       {!isLoading && interviews.length === 0 ? (
         <p style={{ color: "lightgrey" }}>No interviews set</p>
       ) : (
@@ -465,7 +566,7 @@ const DetailsInterviewView = () => {
                         <Skeleton animation="wave"></Skeleton>
                       ) : (
                         <Autocomplete
-                          {...defaultProps}
+                          {...interviewDefaultProps}
                           renderInput={(params: any) => (
                             <TextField {...params} variant="standard" />
                           )}
@@ -483,7 +584,18 @@ const DetailsInterviewView = () => {
                       ) : (
                         <TextField
                           id="filled-textarea"
-                          defaultValue={interview.date.split("T")[0]}
+                          defaultValue={
+                            interview.date &&
+                            new Date(
+                              new Date(interview.date).getTime() -
+                                new Date(interview.date).getTimezoneOffset() *
+                                  60000
+                            )
+                              .toISOString()
+                              .split("T")[0]
+
+                            // interview.date.split("T")[0]
+                          }
                           variant="filled"
                           inputProps={{ style: { padding: 8 } }}
                           type="date"
@@ -562,6 +674,154 @@ const DetailsInterviewView = () => {
         message="Interview deleted"
         action={action}
       />
+      <Dialog
+        open={isAddInterview}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleAddInterviewClose}
+        aria-describedby="alert-dialog-slide-description"
+        maxWidth="xl"
+      >
+        <DialogTitle>Add New Interview</DialogTitle>
+        <DialogContent>
+          <>
+            <div style={{ display: "flex" }}>
+              <InputLabel
+                htmlFor="type"
+                sx={{ width: "30%", marginRight: "20px" }}
+              >
+                Interview Type
+              </InputLabel>
+              <Autocomplete
+                {...interviewDefaultProps}
+                renderInput={(params: any) => (
+                  <TextField {...params} variant="standard" />
+                )}
+                id="type"
+                // defaultValue={interviews[0].type}
+                value={newInterview[0].type}
+                onChange={(
+                  e: React.SyntheticEvent<Element, Event>,
+                  value: any
+                ) => {
+                  setNewInterview((prevState: interviewType[]) => {
+                    const newState = JSON.parse(JSON.stringify(prevState));
+                    newState[0].type = value;
+                    console.log(newState);
+                    return newState;
+                  });
+                }}
+                sx={{ width: "20vw" }}
+              />
+            </div>
+            <div style={{ display: "flex" }}>
+              <InputLabel
+                htmlFor="date"
+                sx={{ width: "30%", marginRight: "20px" }}
+              >
+                Date
+              </InputLabel>
+              <TextField
+                id="date"
+                // defaultValue={interviews[0].date.split("T")[0]}
+                variant="filled"
+                inputProps={{ style: { padding: 8 } }}
+                type="date"
+                sx={{ width: "20vw" }}
+                value={newInterview[0].date}
+                onChange={(e) => {
+                  handleAddInterviewChange(e);
+                }}
+              ></TextField>
+            </div>
+            <div style={{ display: "flex" }}>
+              <InputLabel
+                htmlFor="interviewer_name"
+                sx={{ width: "30%", marginRight: "20px" }}
+              >
+                Interviewer Name
+              </InputLabel>
+              <TextField
+                id="interviewer_name"
+                // defaultValue={interviews[0].interviewer_name}
+                variant="filled"
+                inputProps={{ style: { padding: 8 } }}
+                sx={{ width: "20vw" }}
+                value={newInterview[0].interviewer_name}
+                onChange={(e) => {
+                  handleAddInterviewChange(e);
+                }}
+              ></TextField>
+            </div>
+            <div style={{ display: "flex" }}>
+              <InputLabel
+                htmlFor="interviewer_email"
+                sx={{ width: "30%", marginRight: "20px" }}
+              >
+                Interviewer Email
+              </InputLabel>
+              <TextField
+                id="interviewer_email"
+                // defaultValue={interviews[0].interviewer_email}
+                variant="filled"
+                inputProps={{ style: { padding: 8 } }}
+                sx={{ width: "20vw" }}
+                type="email"
+                value={newInterview[0].interviewer_email}
+                onChange={(e) => {
+                  handleAddInterviewChange(e);
+                }}
+              ></TextField>
+            </div>
+            <div style={{ display: "flex" }}>
+              <InputLabel
+                htmlFor="interviewer_title"
+                sx={{ width: "30%", marginRight: "20px" }}
+              >
+                Interviewer Title
+              </InputLabel>
+              <TextField
+                id="interviewer_title"
+                // defaultValue={interviews[0].interviewer_title}
+                variant="filled"
+                inputProps={{ style: { padding: 8 } }}
+                sx={{ width: "20vw" }}
+                value={newInterview[0].interviewer_title}
+                onChange={(e) => {
+                  handleAddInterviewChange(e);
+                }}
+              ></TextField>
+            </div>
+
+            <p style={{ fontWeight: "bold" }}>Interview notes</p>
+            <TextField
+              id="interview_note"
+              multiline
+              rows={4}
+              // defaultValue={interviews[0].interview_note}
+              value={newInterview[0].interview_note}
+              onChange={(e) => {
+                handleAddInterviewChange(e);
+              }}
+              variant="filled"
+              inputProps={{ style: { padding: 8 } }}
+              sx={{ width: "80vw" }}
+            />
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  setIsAddInterview(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button onClick={submitNewInterview} variant="contained">
+                Submit
+              </Button>
+            </DialogActions>
+          </>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

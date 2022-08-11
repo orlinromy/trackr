@@ -5,8 +5,10 @@ import Button from "@mui/material/Button";
 import TocIcon from "@mui/icons-material/Toc";
 import ViewKanbanIcon from "@mui/icons-material/ViewKanban";
 import ButtonGroup from "@mui/material/ButtonGroup";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<string>(
     localStorage.getItem("viewMode") || "table"
   );
@@ -17,12 +19,20 @@ const Home = () => {
     localStorage.setItem("viewMode", e.currentTarget.id);
   }
 
+  function navigateNew() {
+    navigate("/new");
+  }
+
   return (
     <div>
       <ButtonGroup
         variant="outlined"
         aria-label="outlined primary button group"
       >
+        <Button variant="contained" onClick={navigateNew}>
+          {" "}
+          + Add New Application
+        </Button>
         <Button onClick={setMode} id="table" disabled={viewMode === "table"}>
           <TocIcon />
         </Button>

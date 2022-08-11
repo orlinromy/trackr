@@ -21,34 +21,34 @@ const Details = (props: detailsProps) => {
   const params = useParams<string>();
   const navigate = useNavigate();
 
-  const [job, setJob] = useState<jobType>({
-    id: "",
-    title: "",
-    company: "",
-    location: "",
-    jd_link: null,
-    jd_file: null,
-    latest_status: "",
-    application_note: "",
-    application_date: "",
-    hr_email: null,
-  });
+  // const [job, setJob] = useState<jobType>({
+  //   id: "",
+  //   title: "",
+  //   company: "",
+  //   location: "",
+  //   jd_link: null,
+  //   jd_file: null,
+  //   latest_status: "",
+  //   application_note: "",
+  //   application_date: "",
+  //   hr_email: null,
+  // });
 
-  const [interviews, setInterviews] = useState<interviewType[]>([
-    {
-      id: "",
-      stage: 0,
-      type: "",
-      date: "",
-      has_assignment: false,
-      assignment_details: null,
-      interview_note: null,
-      job_id: "",
-      interviewer_name: null,
-      interviewer_email: null,
-      interviewer_title: null,
-    },
-  ]);
+  // const [interviews, setInterviews] = useState<interviewType[]>([
+  //   {
+  //     id: "",
+  //     stage: 0,
+  //     type: "",
+  //     date: "",
+  //     has_assignment: false,
+  //     assignment_details: null,
+  //     interview_note: null,
+  //     job_id: "",
+  //     interviewer_name: null,
+  //     interviewer_email: null,
+  //     interviewer_title: null,
+  //   },
+  // ]);
 
   function handleBack() {
     navigate("/");
