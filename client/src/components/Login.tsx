@@ -38,11 +38,11 @@ const Login = () => {
     }
   }
 
-  useEffect(() => {
-    if (authCtx.credentials.access !== "" || localStorage.getItem("access")) {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (authCtx.credentials.access !== "" || localStorage.getItem("access")) {
+  //     navigate("/");
+  //   }
+  // }, []);
 
   return (
     <div className="flex border rounded-xl shadow-xl justify-center items-center mt-[20vh] ml-[15vw] py-20 w-[70vw]">
