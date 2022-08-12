@@ -29,7 +29,6 @@ Additional library:
 - User can view the list of their existing job applications in 2 modes: kanban board and table view, add a new application, edit their existing application, and delete their applications
 - User can update the status of their application by moving the cards in the kanban board
 - User should be able to add scheduled interview, remove interviews, and add more details to their interviews
-- User should be able to see suggested actions based on the status of their application
 
 ## Design
 
