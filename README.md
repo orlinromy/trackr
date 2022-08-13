@@ -114,3 +114,7 @@ npm i
   I encountered a lot of type errors when I build this project, but overall it is a good learning experience.
 
 - Lack of planning for the front-end components
+
+## Acknowledgement
+
+- https://www.youtube.com/watch?v=Vqa9NMzF3wc&ab_channel=LogRocket for the kanban board tutorial
