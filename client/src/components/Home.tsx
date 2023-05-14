@@ -15,7 +15,6 @@ const Home = () => {
   );
   function setMode(e: React.MouseEvent<HTMLElement>) {
     e.stopPropagation();
-    console.log(e);
     setViewMode(e.currentTarget.id);
     localStorage.setItem("viewMode", e.currentTarget.id);
   }

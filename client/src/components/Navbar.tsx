@@ -8,7 +8,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const authCtx = useContext(AuthContext);
   async function logout() {
-    console.log("logging out...");
     const token = authCtx.credentials.access || localStorage.getItem("access");
     if (token) {
       const data = await axios.patch(
@@ -25,7 +24,6 @@ const Navbar = () => {
           },
         }
       );
-      console.log(data);
       window.localStorage.clear();
       authCtx.setCredentials({ access: "", refresh: "" });
       navigate("/login");

@@ -101,7 +101,6 @@ const DetailsInterviewView = () => {
 
   async function getOneJobInterviews() {
     setIsLoading(true);
-    console.log("get all interviews");
     try {
       const data = await axios.post(
         "http://localhost:5001/interviews/oneInterview",
@@ -118,7 +117,6 @@ const DetailsInterviewView = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -195,7 +193,6 @@ const DetailsInterviewView = () => {
   }
 
   async function deleteInterview() {
-    console.log("get all interviews");
     try {
       const data = await axios.delete(
         "http://localhost:5001/interviews/interview",
@@ -213,7 +210,6 @@ const DetailsInterviewView = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -351,8 +347,6 @@ const DetailsInterviewView = () => {
 
   async function addNewInterviews(jobId: string) {
     try {
-      console.log("adding new interviews");
-
       const data = await axios.put(
         "http://localhost:5001/interviews/interview",
         {
@@ -369,7 +363,6 @@ const DetailsInterviewView = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -790,7 +783,6 @@ const DetailsInterviewView = () => {
                   setNewInterview((prevState: interviewType[]) => {
                     const newState = JSON.parse(JSON.stringify(prevState));
                     newState[0].type = value;
-                    console.log(newState);
                     return newState;
                   });
                 }}

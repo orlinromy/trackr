@@ -24,7 +24,6 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { AutoMode } from "@mui/icons-material";
 
 const Transition = React.forwardRef(function Transition(
   props: SlideProps,
@@ -80,8 +79,6 @@ const HomeKanban = () => {
           },
         }
       );
-      console.log(data.data);
-
       if (data.data.access) {
         authCtx.setCredentials({
           ...authCtx.credentials,
@@ -107,7 +104,6 @@ const HomeKanban = () => {
   }
 
   async function deleteEntry() {
-    console.log("delete", selectedId);
     try {
       const data = await axios.delete("http://localhost:5001/jobs/job", {
         headers: {
@@ -121,7 +117,6 @@ const HomeKanban = () => {
             authCtx.credentials.refresh || localStorage.getItem("refresh"),
         },
       });
-      console.log(data.data);
       if (data.data.access) {
         authCtx.setCredentials({
           ...authCtx.credentials,
@@ -190,7 +185,6 @@ const HomeKanban = () => {
 
   async function addNewInterviews(jobId: string) {
     try {
-      console.log("adding new interviews");
       setInterviews((prevState) =>
         prevState.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -213,7 +207,6 @@ const HomeKanban = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -230,7 +223,6 @@ const HomeKanban = () => {
   }
 
   async function getAllJobs() {
-    console.log("get all jobs");
     try {
       const data = await axios.post(
         "http://localhost:5001/jobs/job",
@@ -246,7 +238,6 @@ const HomeKanban = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -296,7 +287,6 @@ const HomeKanban = () => {
           },
         }
       );
-      console.log(data.data);
       if (data.data.access) {
         authCtx.setCredentials({
           ...authCtx.credentials,
@@ -538,7 +528,6 @@ const HomeKanban = () => {
                   setInterviews((prevState: interviewType[]) => {
                     const newState = JSON.parse(JSON.stringify(prevState));
                     newState[0].type = value;
-                    console.log(newState);
                     return newState;
                   });
                 }}

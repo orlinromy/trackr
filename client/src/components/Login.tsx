@@ -23,7 +23,6 @@ const Login = () => {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     try {
-      console.log("submit login");
       const res = await axios.post<customType.loginData>(
         "http://localhost:5001/sessions/login",
         data

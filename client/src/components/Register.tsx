@@ -23,13 +23,11 @@ const Register = () => {
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
     try {
-      console.log("submit login");
       await axios.put("http://localhost:5001/users/register", data);
       const loginData = await axios.post<customType.loginData>(
         "http://localhost:5001/sessions/login",
         { email: data.email, password: data.password }
       );
-      console.log(loginData);
       authCtx.setCredentials(loginData.data);
       localStorage.setItem("access", loginData.data.access);
       localStorage.setItem("refresh", loginData.data.refresh);

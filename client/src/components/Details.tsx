@@ -2,13 +2,11 @@ import React, { useState } from "react";
 import DetailsView from "./DetailsView";
 import DetailsEdit from "./DetailsEdit";
 import DetailsInterviewView from "./DetailsInterviewView";
-import DetailsInterviewEdit from "./DetailsInterviewEdit";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { jobType, interviewType } from "../types/type";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-// import { useNavigate, useParams } from "react-router-dom";
 
 type detailsProps = {
   isEdit: boolean;

@@ -107,7 +107,6 @@ const AddApplication = () => {
   }
   async function addNewInterviews(jobId: string) {
     try {
-      console.log("adding new interviews");
       setInterviews((prevState) =>
         prevState.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -130,7 +129,6 @@ const AddApplication = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -148,7 +146,6 @@ const AddApplication = () => {
 
   async function addNewApplication(inputData: Omit<jobType, "id">) {
     try {
-      console.log("adding new application");
       const data = await axios.put(
         "http://localhost:5001/jobs/job",
         {
@@ -179,8 +176,6 @@ const AddApplication = () => {
         });
         localStorage.setItem("access", data.data.access);
       }
-      console.log(data.data);
-      console.log("adding new application successful");
 
       if (interviews.length !== 0) {
         addNewInterviews(data.data.newJob[0].id);
@@ -222,7 +217,6 @@ const AddApplication = () => {
     } else {
       newState[e.currentTarget.id] = e.currentTarget.value;
     }
-    console.log(newState);
     setJob(newState);
   }
   return (
@@ -387,7 +381,6 @@ const AddApplication = () => {
                       if (value === "WISHLIST") {
                         newState.application_date = "";
                       }
-                      // console.log(newState);
                       return newState;
                     });
                   }}
@@ -512,7 +505,6 @@ const AddApplication = () => {
                             JSON.stringify(prevState)
                           );
                           newState[idx].type = value;
-                          console.log(newState);
                           return newState;
                         });
                       }}

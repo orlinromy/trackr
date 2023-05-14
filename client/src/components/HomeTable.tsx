@@ -100,7 +100,6 @@ const HomeTable = () => {
   }
 
   async function getAllJobs() {
-    console.log("get all jobs");
     try {
       const data = await axios.post(
         "http://localhost:5001/jobs/job",
@@ -116,7 +115,6 @@ const HomeTable = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -136,8 +134,6 @@ const HomeTable = () => {
   }
 
   async function getAllInterviews() {
-    console.log("get all interviews");
-
     try {
       const data = await axios.post(
         "http://localhost:5001/interviews/interview",
@@ -153,7 +149,6 @@ const HomeTable = () => {
           },
         }
       );
-      console.log(data);
       if (data.data.access) {
         authCtx.setCredentials({
           ...authCtx.credentials,
@@ -173,7 +168,6 @@ const HomeTable = () => {
   function handleDetails() {
     handleMenuClose();
     navigate(`/detail/${selectedId}`);
-    // console.log(e);
   }
 
   function handleDelete() {
@@ -182,7 +176,6 @@ const HomeTable = () => {
   }
 
   async function deleteEntry() {
-    console.log("delete", selectedId);
     try {
       const data = await axios.delete("http://localhost:5001/jobs/job", {
         headers: {
@@ -196,7 +189,6 @@ const HomeTable = () => {
             authCtx.credentials.refresh || localStorage.getItem("refresh"),
         },
       });
-      console.log(data.data);
       if (data.data.access) {
         authCtx.setCredentials({
           ...authCtx.credentials,
@@ -222,14 +214,12 @@ const HomeTable = () => {
 
   function setInterviewDate(jobId: string) {
     const jobInterview = interviews.filter((interview) => {
-      // console.log(new Date(Date.now()) < new Date(interview.date));
       return (
         interview.job_id === jobId &&
         new Date(Date.now()) < new Date(interview.date)
       );
     });
 
-    // console.log(jobInterview[0]);
     return jobInterview[0];
   }
 
@@ -432,8 +422,6 @@ const HomeTable = () => {
                   filter === "" ? data : data.latest_status === filter
                 )
                 .map((data) => {
-                  console.log(data);
-                  console.log(setInterviewDate(data.id)?.date);
                   data.upcomingInterview =
                     setInterviewDate(data.id)?.date ||
                     new Date(Date.now() + 473385600000).toISOString();

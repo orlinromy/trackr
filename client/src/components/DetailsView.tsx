@@ -35,7 +35,6 @@ const DetailsView = () => {
 
   async function getOneJob() {
     setIsLoading(true);
-    console.log("get all jobs");
     try {
       const data = await axios.post(
         "http://localhost:5001/jobs/oneJob",
@@ -52,7 +51,6 @@ const DetailsView = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({

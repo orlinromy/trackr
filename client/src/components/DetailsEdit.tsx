@@ -61,7 +61,6 @@ const DetailsEdit = () => {
 
   async function getOneJob() {
     setIsLoading(true);
-    console.log("get all jobs");
     try {
       const data = await axios.post(
         "http://localhost:5001/jobs/oneJob",
@@ -78,7 +77,6 @@ const DetailsEdit = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -98,7 +96,6 @@ const DetailsEdit = () => {
   }
 
   async function editJob(inputData: Omit<jobType, "id">) {
-    console.log("edit jobs");
     try {
       const data = await axios.patch(
         "http://localhost:5001/jobs/job",
@@ -124,7 +121,6 @@ const DetailsEdit = () => {
           },
         }
       );
-      console.log(data.data);
 
       if (data.data.access) {
         authCtx.setCredentials({
@@ -169,7 +165,6 @@ const DetailsEdit = () => {
       hr_email,
       application_note,
     });
-    console.log("submit");
   }
 
   useEffect(() => {
