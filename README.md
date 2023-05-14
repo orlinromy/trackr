@@ -2,6 +2,8 @@
 
 A simple job tracking application that eventually will allow user to automate their job searching processes
 
+BE repo: [trackr-be](https://github.com/orlinromy/trackr-be)
+
 ## Technologies Used
 
 Main stack:
